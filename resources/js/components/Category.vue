@@ -25,7 +25,6 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Training name</th>
                                     <th>Prepared By</th>
                                     <th>Total of Training</th> <!--Column inside website-->
@@ -34,8 +33,6 @@
                                     <th class="text-right">Action</th>
                                 </tr>
                                 <tr v-for="category in categories.data" :key="category.id">
-                                    
-                                    <td>{{category.id}}</td>
                                     <td>
                                         <router-link
                                             :to="'/related/'+category.id"
@@ -99,7 +96,7 @@
                                     type="text"
                                     name="t_name"
                                     class="form-control"
-                                    placeholder="Enter trainer name"
+                                    placeholder="Module prepared by"
                                     :class="{ 'is-invalid': form.errors.has('t_name') }"
                                 >
                                 <has-error :form="form" field="t_name"></has-error>

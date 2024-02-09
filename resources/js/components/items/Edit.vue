@@ -81,6 +81,31 @@
                             </div>
                         </div>
                     </div>
+                                        <!-- Add this inside your form tag where appropriate -->
+<div class="form-group row">
+    <div class="col-4">
+        <label for="trainingDate">Training Date :</label>
+        <input
+            v-model="form.training_date"
+            type="date"
+            class="form-control"
+            placeholder="Select training date"
+            :class="{ 'is-invalid': form.errors.has('training_date') }"
+        >
+        <has-error :form="form" field="training_date"></has-error>
+    </div>
+    <div class="col-4">
+        <label for="expiredDate">Expired Date :</label>
+        <input
+            v-model="form.expired_date"
+            type="date"
+            class="form-control"
+            :class="{ 'is-invalid': form.errors.has('expired_date') }"
+            disabled
+        >
+        <has-error :form="form" field="expired_date"></has-error>
+    </div>
+</div>
                 </div>
                 <div class="d-flex justify-content-center">
                     <a @click.prevent="addForm" class="btn bnt-lg btn-outline-success">
@@ -103,10 +128,21 @@ export default {
             form: new Form({
                 name: "",
                 category_id: "",
+                training_date: "",
+                expired_date: "",
                 rows: [{ id: 0, key: "", value: "" }]
             })
         };
     },
+    watch: {
+    'form.training_date': function(newDate) {
+        if (newDate) {
+            let expiredDate = new Date(newDate);
+            expiredDate.setDate(expiredDate.getDate() + 60);
+            this.form.expired_date = expiredDate.toISOString().split('T')[0];
+        }
+    }
+},
     methods: {
         loadItem() {
             let vm = this;

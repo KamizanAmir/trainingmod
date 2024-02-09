@@ -17,12 +17,12 @@
             <form @submit.prevent="createItem" class="bg-white p-4">
                 <div class="form-group row">
                     <div class="col-6">
-                        <label for="name">Item Name :</label>
+                        <label for="name">Trainer Name :</label>
                         <input
                             v-model="form.name"
                             type="text"
                             class="form-control"
-                            placeholder="Enter Item name :"
+                            placeholder="Trainer name"
                             :class="{ 'is-invalid': form.errors.has('name') }"
                         >
                         <has-error :form="form" field="name"></has-error>
@@ -137,14 +137,14 @@ export default {
         };
     },
     watch: {
-        'form.training_date': function(newDate) {
-            if (newDate) {
-                let expiredDate = new Date(newDate);
-                expiredDate.setDate(expiredDate.getDate() + 60);
-                this.form.expired_date = expiredDate.toISOString().split('T')[0];
-            }
+    'form.training_date': function(newDate) {
+        if (newDate) {
+            let expiredDate = new Date(newDate);
+            expiredDate.setDate(expiredDate.getDate() + 60);
+            this.form.expired_date = expiredDate.toISOString().split('T')[0];
         }
-    },
+    }
+},
     methods: {
         loadCategories() {
             axios

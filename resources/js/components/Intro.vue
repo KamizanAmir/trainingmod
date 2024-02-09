@@ -23,9 +23,15 @@
                     </svg>
                 </a>Simple Dashboard and Alert
             </h1>
-            <p>1</p>
-            <p>2</p>
-            <p>3</p>
+            <!-- Notification Alert Section -->
+            <div v-if="expiringItems.length">
+                <ul>
+                    <li v-for="item in expiringItems" :key="item.id">{{ items.name }} is expiring soon.</li>
+                </ul>
+            </div>
+            <div v-else>
+                No new alert.
+            </div>
             <h1>
                 <a
                     id="user-content-project-objectives"
@@ -51,3 +57,27 @@
         </article>
     </div>
 </template>
+<script>
+export default {
+    data() {
+        return {
+            expiringItems: []
+        }
+    },
+    mounted() {
+        this.checkExpiringItems();
+    },
+    methods: {
+        checkExpiringItems() {
+            // Example API call, adjust the URL as necessary
+            axios.get('/api/expiring-items')
+                .then(response => {
+                    this.expiringItems = response.data;
+                })
+                .catch(error => {
+                    console.error("There was an error fetching the expiring items:", error);
+                });
+        }
+    }
+}
+</script>
