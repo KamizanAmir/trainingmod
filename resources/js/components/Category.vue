@@ -6,11 +6,9 @@
                     <div class="card-header">
                         <div style="text-align: left;">
                             <h1><strong>Training Module List</strong></h1>
-
                                 <h2 style="text-align: left;">
                                     <span style="text-align: left;">Total no. of training module : {{resultCount}}</span>
                                 </h2>
-
                         </div>
                         <div class="card-tools mt-2">
                             <button class="btn btn-success" @click="createModal">
@@ -29,8 +27,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Training name</th>
-                                    <th>Total of Training</th>
-                                    <th>Train By</th>
+                                    <th>Prepared By</th>
+                                    <th>Total of Training</th> <!--Column inside website-->
                                     <th>Created at</th>
                                     <th>Updated at</th>
                                     <th class="text-right">Action</th>
@@ -43,12 +41,8 @@
                                             :to="'/related/'+category.id"
                                         >{{category.name|ucFirst}}</router-link>
                                     </td>
-                                    <td>{{category.count}}</td>
-                                    <td>
-                                        <router-link
-                                            :to="'/related/'+category.id"
-                                        >{{category.name|ucFirst}}</router-link>
-                                    </td>
+                                    <td>{{category.t_name}}</td> <!--Just call the column name Kamizan-->
+                                    <td>{{category.count || '0'}}</td>
                                     <td>{{category.created_at | dFormat}}</td>
                                     <td>{{category.updated_at | dFormat}}</td>
                                     <td class="text-right">
@@ -80,8 +74,8 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 v-show="!editMode" class="modal-title" id="addNewLabel">Add New Category</h5>
-                        <h5 v-show="editMode" class="modal-title" id="addNewLabel">Update Category</h5>
+                        <h5 v-show="!editMode" class="modal-title" id="addNewLabel">Add New Module</h5>
+                        <h5 v-show="editMode" class="modal-title" id="addNewLabel">Update Module</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -94,10 +88,21 @@
                                     type="text"
                                     name="name"
                                     class="form-control"
-                                    placeholder="Enter training name"
+                                    placeholder="Enter module name"
                                     :class="{ 'is-invalid': form.errors.has('name') }"
                                 >
                                 <has-error :form="form" field="name"></has-error>
+                            </div>
+                            <div class="form-group"> <!--This one Added for input field Kamizan-->
+                                <input
+                                    v-model="form.t_name"
+                                    type="text"
+                                    name="t_name"
+                                    class="form-control"
+                                    placeholder="Enter trainer name"
+                                    :class="{ 'is-invalid': form.errors.has('t_name') }"
+                                >
+                                <has-error :form="form" field="t_name"></has-error>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -114,6 +119,7 @@
 
 <script>
 // import { setInterval } from "timers";
+import moment from 'moment';
 export default {
     data() {
         return {
@@ -121,15 +127,22 @@ export default {
             categories: {},
             form: new Form({
                 id: "",
-                name: ""
+                name: "",
+                t_name: "",
             })
         };
+    },
+    filters: {
+        dFormat(value) {
+            return moment(String(value)).format('DD-MM-YYYY HH:mm:ss');
+        }
     },
     methods: {
         createModal() {
             this.editMode = false;
             this.form.reset();
             this.form.clear();
+            this.form.t_name = ""; //Critical also lol kamizan
             $("#addNew").modal("show");
         },
         editModal(category) {
@@ -138,6 +151,7 @@ export default {
             this.form.clear();
             $("#addNew").modal("show");
             this.form.fill(category);
+            this.form.t_name = category.t_name || ''; //need to set it up this way kamizan
         },
 
         loadCategories() {

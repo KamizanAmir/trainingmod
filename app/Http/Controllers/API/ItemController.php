@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Item;
 use function GuzzleHttp\json_encode;
 use App\Http\Requests\ItemCreateRequest;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
@@ -40,7 +41,9 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    { }
+    { 
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -50,9 +53,22 @@ class ItemController extends Controller
      */
     public function store(ItemCreateRequest $request)
     {
+        // Decode the rows and merge them into the request attributes
         $request->merge(['properties' => json_encode($request->rows)]);
-        return $this->repository->create($request->all());
+
+        // Calculate the expired date based on the training date
+        $trainingDate = $request->input('training_date');
+        $expiredDate = \Carbon\Carbon::createFromFormat('Y-m-d', $trainingDate)
+                                    ->addDays(60)
+                                    ->format('Y-m-d');
+
+        // Create the item with the request data and calculated expired date
+        $item = $this->repository->create(array_merge($request->all(), ['expired_date' => $expiredDate]));
+
+        // Return the created item or a response
+        return response()->json(['item' => $item], 201);
     }
+
 
     /**
      * Display the specified resource.
@@ -85,9 +101,28 @@ class ItemController extends Controller
      */
     public function update(ItemCreateRequest $request, $id)
     {
+        // Decode the rows and merge them into the request attributes
         $request->merge(['properties' => json_encode($request->rows)]);
-        $this->repository->findOrFail($id)->update($request->all());
+    
+        // Find the item
+        $item = $this->repository->findOrFail($id);
+    
+        // Calculate the expired date based on the training date, if it's changed
+        if ($request->has('training_date')) {
+            $trainingDate = $request->input('training_date');
+            $expiredDate = \Carbon\Carbon::createFromFormat('Y-m-d', $trainingDate)
+                                           ->addDays(60)
+                                           ->format('Y-m-d');
+            $request->merge(['expired_date' => $expiredDate]);
+        }
+    
+        // Update the item with the request data
+        $item->update($request->all());
+    
+        // Return the updated item or a response
+        return response()->json(['item' => $item], 200);
     }
+    
 
     /**
      * Remove the specified resource from storage.

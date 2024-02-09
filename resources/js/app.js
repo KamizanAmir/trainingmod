@@ -18,7 +18,11 @@ import {
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
-
+Vue.filter('dFormat', function(value) {
+    if (value) {
+        return moment(String(value)).format('DD-MM-YYYY HH:mm:ss');
+    }
+});
 // Initialize vue router and register
 Vue.use(VueRouter)
 let routes = [{

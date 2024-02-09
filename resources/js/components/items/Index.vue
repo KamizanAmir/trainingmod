@@ -4,11 +4,11 @@
             <div class="col-md-12">
                 <div class="card pt-2 pb-2">
                     <div class="card-header">
-                        <div class="d-flex justify-content-inline">
-                            <h3 class="card-title mt-2">Items List Table</h3>
-                            <p class="card-title mt-2 ml-5">
-                                <span class="ml-5">Total no. of items : {{resultCount}}</span>
-                            </p>
+                        <div style="text-align: left;">
+                            <h1><strong>Employee List</strong></h1>
+                                <h2 style="text-align: left;">
+                                    <span style="text-align: left;">Total no. of employees : {{resultCount}}</span>
+                                </h2>
                         </div>
                         <div class="card-tools mt-2">
                             <router-link to="/items-create" class="btn btn-success">
@@ -25,16 +25,14 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <th>Item name</th>
-                                    <th>Item ID</th>
-                                    <th>Category</th>
+                                    <th>Trainer name</th>
+                                    <th>Training Item</th>
                                     <th>Created at</th>
                                     <th>Updated at</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                                 <tr v-for="item in items" :key="item.id">
                                     <td>{{item.name | ucFirst}}</td>
-                                    <td>{{item.id}}</td>
                                     <td v-if="item.category">{{item.category.name}}</td>
                                     <td v-else class="text-danger">may be deleted</td>
                                     <td>{{item.created_at | dFormat}}</td>
@@ -64,6 +62,7 @@
 
 <script>
 // import { setInterval } from "timers";
+import moment from 'moment';
 export default {
     data() {
         return {
@@ -72,6 +71,11 @@ export default {
                 id: ""
             })
         };
+    },
+    filters: {
+        dFormat(value) {
+            return moment(String(value)).format('DD-MM-YYYY HH:mm:ss');
+        }
     },
     methods: {
         loadItems() {

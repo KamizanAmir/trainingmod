@@ -7,7 +7,13 @@ use App\Category;
 
 class Item extends Model
 {
-    protected $fillable = ["name", "category_id", "properties"];
+    protected $fillable = [
+        "name", 
+        "category_id", 
+        "properties",
+        'training_date',
+        'expired_date',
+    ];
 
     public function category()
     {

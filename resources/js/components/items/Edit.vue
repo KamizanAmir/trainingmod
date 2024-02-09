@@ -17,12 +17,12 @@
             <form @submit.prevent="editItem" class="bg-white p-4">
                 <div class="form-group row">
                     <div class="col-6">
-                        <label for="name">Item Name:</label>
+                        <label for="name">Trainer name:</label>
                         <input
                             v-model="form.name"
                             type="text"
                             class="form-control"
-                            placeholder="Enter Item name :"
+                            placeholder="Enter employee name :"
                             :class="{ 'is-invalid': form.errors.has('name') }"
                         >
                         <has-error :form="form" field="name"></has-error>
@@ -30,14 +30,14 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-6">
-                        <label for="category">Category:</label>
+                        <label for="category">Training Module :</label>
                         <select
                             v-model="form.category_id"
                             name="category"
                             class="form-control"
                             :class="{ 'is-invalid': form.errors.has('category_id') }"
                         >
-                            <option value="null" disabled>Select a Category</option>
+                            <option value="null" disabled>Select a module</option>
                             <option
                                 v-for="category in categories"
                                 :key="category.id"
@@ -48,8 +48,8 @@
                     </div>
                 </div>
                 <div class="w-100 row">
-                    <label class="col-6 text-bold">Attribute Name :</label>
-                    <label class="col-6 pl-5 text-bold">Attribute Value :</label>
+                    <label class="col-6 text-bold">Employee Name :</label>
+                    <label class="col-6 pl-5 text-bold">Employee ID :</label>
                 </div>
                 <div v-for="(row,index) in form.rows" :key="row.id">
                     <div class="form-group row">

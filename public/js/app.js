@@ -2204,7 +2204,10 @@ module.exports = JSON.parse("{\"name\":\"axios\",\"version\":\"0.21.4\",\"descri
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 // import { setInterval } from "timers";
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2212,15 +2215,22 @@ __webpack_require__.r(__webpack_exports__);
       categories: {},
       form: new Form({
         id: "",
-        name: ""
+        name: "",
+        t_name: ""
       })
     };
+  },
+  filters: {
+    dFormat: function dFormat(value) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('DD-MM-YYYY HH:mm:ss');
+    }
   },
   methods: {
     createModal: function createModal() {
       this.editMode = false;
       this.form.reset();
       this.form.clear();
+      this.form.t_name = ""; //Critical also lol kamizan
       $("#addNew").modal("show");
     },
     editModal: function editModal(category) {
@@ -2229,6 +2239,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form.clear();
       $("#addNew").modal("show");
       this.form.fill(category);
+      this.form.t_name = category.t_name || ''; //need to set it up this way kamizan
     },
     loadCategories: function loadCategories() {
       var _this = this;
@@ -2314,12 +2325,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   data: function data() {
     return {
       category: {}
     };
+  },
+  filters: {
+    dFormat: function dFormat(value) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('DD-MM-YYYY HH:mm:ss');
+    }
   },
   methods: {
     loadItem: function loadItem() {
@@ -2357,6 +2376,8 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         name: "",
         category_id: "null",
+        training_date: "",
+        expired_date: "",
         rows: [{
           id: 0,
           key: "",
@@ -2364,6 +2385,15 @@ __webpack_require__.r(__webpack_exports__);
         }]
       })
     };
+  },
+  watch: {
+    'form.training_date': function formTraining_date(newDate) {
+      if (newDate) {
+        var expiredDate = new Date(newDate);
+        expiredDate.setDate(expiredDate.getDate() + 60);
+        this.form.expired_date = expiredDate.toISOString().split('T')[0];
+      }
+    }
   },
   methods: {
     loadCategories: function loadCategories() {
@@ -2501,7 +2531,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 // import { setInterval } from "timers";
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2510,6 +2543,11 @@ __webpack_require__.r(__webpack_exports__);
         id: ""
       })
     };
+  },
+  filters: {
+    dFormat: function dFormat(value) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('DD-MM-YYYY HH:mm:ss');
+    }
   },
   methods: {
     loadItems: function loadItems() {
@@ -2581,12 +2619,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
   data: function data() {
     return {
       item: {}
     };
+  },
+  filters: {
+    dFormat: function dFormat(value) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('DD-MM-YYYY HH:mm:ss');
+    }
   },
   methods: {
     loadItem: function loadItem() {
@@ -2667,11 +2713,7 @@ var render = function render() {
       attrs: {
         to: "/related/" + category.id
       }
-    }, [_vm._v(_vm._s(_vm._f("ucFirst")(category.name)))])], 1), _vm._v(" "), _c("td", [_vm._v(_vm._s(category.count))]), _vm._v(" "), _c("td", [_c("router-link", {
-      attrs: {
-        to: "/related/" + category.id
-      }
-    }, [_vm._v(_vm._s(_vm._f("ucFirst")(category.name)))])], 1), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm._f("dFormat")(category.created_at)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm._f("dFormat")(category.updated_at)))]), _vm._v(" "), _c("td", {
+    }, [_vm._v(_vm._s(_vm._f("ucFirst")(category.name)))])], 1), _vm._v(" "), _c("td", [_vm._v(_vm._s(category.t_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(category.count || "0"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm._f("dFormat")(category.created_at)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm._f("dFormat")(category.updated_at)))]), _vm._v(" "), _c("td", {
       staticClass: "text-right"
     }, [_c("a", {
       attrs: {
@@ -2725,7 +2767,7 @@ var render = function render() {
     attrs: {
       id: "addNewLabel"
     }
-  }, [_vm._v("Add New Category")]), _vm._v(" "), _c("h5", {
+  }, [_vm._v("Add New Module")]), _vm._v(" "), _c("h5", {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -2736,7 +2778,7 @@ var render = function render() {
     attrs: {
       id: "addNewLabel"
     }
-  }, [_vm._v("Update Category")]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("form", {
+  }, [_vm._v("Update Module")]), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _c("form", {
     on: {
       submit: function submit($event) {
         $event.preventDefault();
@@ -2761,7 +2803,7 @@ var render = function render() {
     attrs: {
       type: "text",
       name: "name",
-      placeholder: "Enter training name"
+      placeholder: "Enter module name"
     },
     domProps: {
       value: _vm.form.name
@@ -2776,6 +2818,38 @@ var render = function render() {
     attrs: {
       form: _vm.form,
       field: "name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.t_name,
+      expression: "form.t_name"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("t_name")
+    },
+    attrs: {
+      type: "text",
+      name: "t_name",
+      placeholder: "Enter trainer name"
+    },
+    domProps: {
+      value: _vm.form.t_name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "t_name", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "t_name"
     }
   })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
@@ -2816,7 +2890,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("th", [_vm._v("ID")]), _vm._v(" "), _c("th", [_vm._v("Training name")]), _vm._v(" "), _c("th", [_vm._v("Total of Training")]), _vm._v(" "), _c("th", [_vm._v("Train By")]), _vm._v(" "), _c("th", [_vm._v("Created at")]), _vm._v(" "), _c("th", [_vm._v("Updated at")]), _vm._v(" "), _c("th", {
+  return _c("tr", [_c("th", [_vm._v("ID")]), _vm._v(" "), _c("th", [_vm._v("Training name")]), _vm._v(" "), _c("th", [_vm._v("Prepared By")]), _vm._v(" "), _c("th", [_vm._v("Total of Training")]), _vm._v(" "), _c("th", [_vm._v("Created at")]), _vm._v(" "), _c("th", [_vm._v("Updated at")]), _vm._v(" "), _c("th", {
     staticClass: "text-right"
   }, [_vm._v("Action")])]);
 }, function () {
@@ -3076,9 +3150,7 @@ var render = function render() {
     staticClass: "card-header"
   }, [_c("div", {
     staticClass: "d-flex justify-content-inline"
-  }, [_c("h3", {
-    staticClass: "card-title mt-2"
-  }, [_vm._v("You are creatting new item : " + _vm._s(_vm.form.name))])]), _vm._v(" "), _c("div", {
+  }, [_c("h1", [_c("strong", [_vm._v("Training Attendee List ")]), _vm._v(" " + _vm._s(_vm.form.name))])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -3087,7 +3159,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-list"
-  }), _vm._v("\n                        List Item\n                    ")])], 1)])]), _vm._v(" "), _c("form", {
+  }), _vm._v("\n                            List Item\n                        ")])], 1)])]), _vm._v(" "), _c("form", {
     staticClass: "bg-white p-4",
     on: {
       submit: function submit($event) {
@@ -3140,7 +3212,7 @@ var render = function render() {
     attrs: {
       "for": "category"
     }
-  }, [_vm._v("Category :")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Training Module :")]), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3170,7 +3242,7 @@ var render = function render() {
       value: "null",
       disabled: ""
     }
-  }, [_vm._v("Select a Category")]), _vm._v(" "), _vm._l(_vm.categories, function (category) {
+  }, [_vm._v("Select a module")]), _vm._v(" "), _vm._l(_vm.categories, function (category) {
     return _c("option", {
       key: category.id,
       domProps: {
@@ -3265,7 +3337,79 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fas fa-minus-circle fa-lg red"
-    })])])])])]);
+    })])])])]), _vm._v(" "), _c("div", {
+      staticClass: "form-group row"
+    }, [_c("div", {
+      staticClass: "col-4"
+    }, [_c("label", {
+      attrs: {
+        "for": "trainingDate"
+      }
+    }, [_vm._v("Training Date :")]), _vm._v(" "), _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.form.training_date,
+        expression: "form.training_date"
+      }],
+      staticClass: "form-control",
+      "class": {
+        "is-invalid": _vm.form.errors.has("training_date")
+      },
+      attrs: {
+        type: "date",
+        placeholder: "Select training date"
+      },
+      domProps: {
+        value: _vm.form.training_date
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.form, "training_date", $event.target.value);
+        }
+      }
+    }), _vm._v(" "), _c("has-error", {
+      attrs: {
+        form: _vm.form,
+        field: "training_date"
+      }
+    })], 1), _vm._v(" "), _c("div", {
+      staticClass: "col-4"
+    }, [_c("label", {
+      attrs: {
+        "for": "expiredDate"
+      }
+    }, [_vm._v("Expired Date :")]), _vm._v(" "), _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.form.expired_date,
+        expression: "form.expired_date"
+      }],
+      staticClass: "form-control",
+      "class": {
+        "is-invalid": _vm.form.errors.has("expired_date")
+      },
+      attrs: {
+        type: "date",
+        disabled: ""
+      },
+      domProps: {
+        value: _vm.form.expired_date
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(_vm.form, "expired_date", $event.target.value);
+        }
+      }
+    }), _vm._v(" "), _c("has-error", {
+      attrs: {
+        form: _vm.form,
+        field: "expired_date"
+      }
+    })], 1)])]);
   }), _vm._v(" "), _c("div", {
     staticClass: "d-flex justify-content-center"
   }, [_c("a", {
@@ -3276,7 +3420,7 @@ var render = function render() {
         return _vm.addForm.apply(null, arguments);
       }
     }
-  }, [_vm._v("\n                    Add More\n                    "), _c("i", {
+  }, [_vm._v("\n                        Add More\n                        "), _c("i", {
     staticClass: "fas fa-plus-circle fa-lg blue"
   })])]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary float-right",
@@ -3292,9 +3436,9 @@ var staticRenderFns = [function () {
     staticClass: "w-100 row"
   }, [_c("label", {
     staticClass: "col-6 text-bold"
-  }, [_vm._v("Attribute Name :")]), _vm._v(" "), _c("label", {
+  }, [_vm._v("Employee Name :")]), _vm._v(" "), _c("label", {
     staticClass: "col-6 pl-5 text-bold"
-  }, [_vm._v("Attribute Value :")])]);
+  }, [_vm._v("Employee ID :")])]);
 }];
 render._withStripped = true;
 
@@ -3352,7 +3496,7 @@ var render = function render() {
     attrs: {
       "for": "name"
     }
-  }, [_vm._v("Item Name:")]), _vm._v(" "), _c("input", {
+  }, [_vm._v("Trainer name:")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3365,7 +3509,7 @@ var render = function render() {
     },
     attrs: {
       type: "text",
-      placeholder: "Enter Item name :"
+      placeholder: "Enter employee name :"
     },
     domProps: {
       value: _vm.form.name
@@ -3389,7 +3533,7 @@ var render = function render() {
     attrs: {
       "for": "category"
     }
-  }, [_vm._v("Category:")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Training Module :")]), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3419,7 +3563,7 @@ var render = function render() {
       value: "null",
       disabled: ""
     }
-  }, [_vm._v("Select a Category")]), _vm._v(" "), _vm._l(_vm.categories, function (category) {
+  }, [_vm._v("Select a module")]), _vm._v(" "), _vm._l(_vm.categories, function (category) {
     return _c("option", {
       key: category.id,
       domProps: {
@@ -3541,9 +3685,9 @@ var staticRenderFns = [function () {
     staticClass: "w-100 row"
   }, [_c("label", {
     staticClass: "col-6 text-bold"
-  }, [_vm._v("Attribute Name :")]), _vm._v(" "), _c("label", {
+  }, [_vm._v("Employee Name :")]), _vm._v(" "), _c("label", {
     staticClass: "col-6 pl-5 text-bold"
-  }, [_vm._v("Attribute Value :")])]);
+  }, [_vm._v("Employee ID :")])]);
 }];
 render._withStripped = true;
 
@@ -3575,14 +3719,18 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-header"
   }, [_c("div", {
-    staticClass: "d-flex justify-content-inline"
-  }, [_c("h3", {
-    staticClass: "card-title mt-2"
-  }, [_vm._v("Items List Table")]), _vm._v(" "), _c("p", {
-    staticClass: "card-title mt-2 ml-5"
+    staticStyle: {
+      "text-align": "left"
+    }
+  }, [_vm._m(0), _vm._v(" "), _c("h2", {
+    staticStyle: {
+      "text-align": "left"
+    }
   }, [_c("span", {
-    staticClass: "ml-5"
-  }, [_vm._v("Total no. of items : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
+    staticStyle: {
+      "text-align": "left"
+    }
+  }, [_vm._v("Total no. of employees : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -3599,10 +3747,10 @@ var render = function render() {
     staticClass: "card-body table-responsive p-0"
   }, [_c("table", {
     staticClass: "table table-hover table-striped"
-  }, [_c("tbody", [_vm._m(0), _vm._v(" "), _vm._l(_vm.items, function (item) {
+  }, [_c("tbody", [_vm._m(1), _vm._v(" "), _vm._l(_vm.items, function (item) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(_vm._f("ucFirst")(item.name)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), item.category ? _c("td", [_vm._v(_vm._s(item.category.name))]) : _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(_vm._f("ucFirst")(item.name)))]), _vm._v(" "), item.category ? _c("td", [_vm._v(_vm._s(item.category.name))]) : _c("td", {
       staticClass: "text-danger"
     }, [_vm._v("may be deleted")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm._f("dFormat")(item.created_at)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm._f("dFormat")(item.updated_at)))]), _vm._v(" "), _c("td", {
       staticClass: "text-right"
@@ -3635,7 +3783,11 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("th", [_vm._v("Item name")]), _vm._v(" "), _c("th", [_vm._v("Item ID")]), _vm._v(" "), _c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("Created at")]), _vm._v(" "), _c("th", [_vm._v("Updated at")]), _vm._v(" "), _c("th", {
+  return _c("h1", [_c("strong", [_vm._v("Employee List")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("Trainer name")]), _vm._v(" "), _c("th", [_vm._v("Training Item")]), _vm._v(" "), _c("th", [_vm._v("Created at")]), _vm._v(" "), _c("th", [_vm._v("Updated at")]), _vm._v(" "), _c("th", {
     staticClass: "text-right"
   }, [_vm._v("Action")])]);
 }];
@@ -80324,7 +80476,11 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 window.Form = vform__WEBPACK_IMPORTED_MODULE_4__["Form"];
 Vue.component(vform__WEBPACK_IMPORTED_MODULE_4__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["HasError"]);
 Vue.component(vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"]);
-
+Vue.filter('dFormat', function (value) {
+  if (value) {
+    return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('DD-MM-YYYY HH:mm:ss');
+  }
+});
 // Initialize vue router and register
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
 var routes = [{

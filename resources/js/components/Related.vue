@@ -24,12 +24,18 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
     props: ["id"],
     data() {
         return {
             category: {}
         };
+    },
+    filters: {
+        dFormat(value) {
+            return moment(String(value)).format('DD-MM-YYYY HH:mm:ss');
+        }
     },
     methods: {
         loadItem() {

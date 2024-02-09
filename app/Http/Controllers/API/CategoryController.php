@@ -29,6 +29,11 @@ class CategoryController extends Controller
     public function index()
     {
         return CategoryResource::collection($this->repository->all());
+        $categories = Category::query()
+        ->select('id', 'name', 'count', 'created_at', 'updated_at', 't_name') // add 't_name' here
+        ->get();
+
+    return response()->json($categories);
     }
 
     /**
@@ -37,14 +42,21 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) //Store to set the createModal in vue mode functional check bottom line for update
     {
-        $this->validate($request, [
-            'name' => ['required', 'string', 'max:255', 'unique:categories'],
+        $request->validate([
+            'name' => 'required',
+            't_name' => 'required', // Validate t_name
+            // other validation rules...
         ]);
-        return  $this->repository->create([
-            'name' => $request['name'],
-        ]);
+    
+        $category = new Category();
+        $category->name = $request->name;
+        $category->t_name = $request->t_name; // Save t_name
+        // other fields...
+        $category->save();
+    
+        return response()->json('Category created successfully');
     }
 
     /**
@@ -65,14 +77,31 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // public function update(Request $request, $id)
+    // {
+    //     $this->validate($request, [
+    //         'name' => ['required', 'string', 'max:255', 'unique:categories'],
+    //     ]);
+    //     $this->repository->findOrFail($id)->update($request->all());
+    //     // return 'Updating data';
+    // }
+    public function update(Request $request, $id) //This one also critical lol
     {
-        $this->validate($request, [
-            'name' => ['required', 'string', 'max:255', 'unique:categories'],
+        $request->validate([
+            'name' => 'required',
+            't_name' => 'required', // Add validation for the trainer name //this under update $id
+            // other validation rules...
         ]);
-        $this->repository->findOrFail($id)->update($request->all());
-        // return 'Updating data';
+
+        $category = Category::find($id);
+        $category->name = $request->name;
+        $category->t_name = $request->t_name; // Save the trainer name
+        // other fields...
+        $category->save();
+
+        return response()->json('Category updated successfully');
     }
+
 
     /**
      * Remove the specified resource from storage.

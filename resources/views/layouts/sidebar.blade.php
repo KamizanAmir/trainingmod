@@ -24,7 +24,7 @@
 
                 <li class="nav-item has-treeview  ">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cog green"></i>
+                        <i class="nav-icon fa fa-plus-circle green"></i>
                         <p>
                             More
                             <i class="right fa fa-angle-left"></i>
@@ -33,13 +33,13 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <router-link to="/category" class="nav-link">
-                                <i class="fa fa-layer-group nav-icon blue"></i>
+                                <i class="fa fa-list nav-icon blue"></i>
                                 <p>Add Training Module</p>
                             </router-link>
                         </li>
                         <li class="nav-item">
                             <router-link to="/items" class="nav-link">
-                                <i class="fa fa-list-alt nav-icon yellow"></i>
+                                <i class="fa fa-check-square nav-icon yellow"></i>
                                 <p>Employee Records</p>
                             </router-link>
                         </li>
