@@ -26,6 +26,7 @@ class ItemCreateRequest extends FormRequest
         return [
             "name" => 'required|string|max:255',
             "category_id" => 'required|integer',
+            'departments' => 'required|string',
             'rows.*.key' => 'required',
             'rows.*.value' => 'required'
         ];

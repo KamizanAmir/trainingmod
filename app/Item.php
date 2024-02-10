@@ -11,6 +11,7 @@ class Item extends Model
         "name", 
         "category_id", 
         "properties",
+        "departments",
         'training_date',
         'expired_date',
     ];

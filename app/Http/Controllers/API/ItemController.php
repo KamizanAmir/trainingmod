@@ -58,12 +58,16 @@ class ItemController extends Controller
 
         // Calculate the expired date based on the training date
         $trainingDate = $request->input('training_date');
+        // $departments = $request->input('departments');
         $expiredDate = \Carbon\Carbon::createFromFormat('Y-m-d', $trainingDate)
                                     ->addDays(60)
                                     ->format('Y-m-d');
 
         // Create the item with the request data and calculated expired date
-        $item = $this->repository->create(array_merge($request->all(), ['expired_date' => $expiredDate]));
+        $item = $this->repository->create(array_merge($request->all(), [
+            'expired_date' => $expiredDate,
+            'departments' => $request->departments,
+        ]));
 
         // Return the created item or a response
         return response()->json(['item' => $item], 201);

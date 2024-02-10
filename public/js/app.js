@@ -2411,6 +2411,7 @@ __webpack_require__.r(__webpack_exports__);
         category_id: "null",
         training_date: "",
         expired_date: "",
+        departments: "",
         rows: [{
           id: 0,
           key: "",
@@ -2423,7 +2424,7 @@ __webpack_require__.r(__webpack_exports__);
     'form.training_date': function formTraining_date(newDate) {
       if (newDate) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 60);
+        expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
     }
@@ -2454,7 +2455,14 @@ __webpack_require__.r(__webpack_exports__);
     createItem: function createItem() {
       var _this2 = this;
       this.$Progress.start();
-      this.form.post("/api/items").then(function () {
+      this.form.post("/api/items", {
+        name: this.form.name,
+        category_id: this.form.category_id,
+        training_date: this.form.training_date,
+        expired_date: this.form.expired_date,
+        departments: this.form.departments // Make sure this line is added
+        // Include any other necessary fields
+      }).then(function () {
         Toast.fire({
           type: "success",
           title: "Item created successfully"
@@ -2489,6 +2497,7 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         name: "",
         category_id: "",
+        departments: "",
         training_date: "",
         expired_date: "",
         rows: [{
@@ -2503,7 +2512,7 @@ __webpack_require__.r(__webpack_exports__);
     'form.training_date': function formTraining_date(newDate) {
       if (newDate) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 60);
+        expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
     }
@@ -2515,6 +2524,9 @@ __webpack_require__.r(__webpack_exports__);
         vm.form.fill({
           name: response.data.name,
           category_id: response.data.category_id,
+          departments: response.data.departments,
+          training_date: response.data.training_date,
+          expired_date: response.data.expired_date,
           rows: JSON.parse(response.data.properties)
         });
         vm.itemId = vm.form.rows.length > 0 ? vm.form.rows[vm.form.rows.length - 1].id : 0;
@@ -3207,7 +3219,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-list"
-  }), _vm._v("\n                            List Item\n                        ")])], 1)])]), _vm._v(" "), _c("form", {
+  }), _vm._v("\n                        List Item\n                    ")])], 1)])]), _vm._v(" "), _c("form", {
     staticClass: "bg-white p-4",
     on: {
       submit: function submit($event) {
@@ -3218,7 +3230,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "form-group row"
   }, [_c("div", {
-    staticClass: "col-6"
+    staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
       "for": "name"
@@ -3252,10 +3264,8 @@ var render = function render() {
       form: _vm.form,
       field: "name"
     }
-  })], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("div", {
-    staticClass: "col-6"
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
       "for": "category"
@@ -3302,13 +3312,116 @@ var render = function render() {
       form: _vm.form,
       field: "category_id"
     }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "departments"
+    }
+  }, [_vm._v("Departments :")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.departments,
+      expression: "form.departments"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("departments")
+    },
+    attrs: {
+      type: "text",
+      placeholder: "Enter departments"
+    },
+    domProps: {
+      value: _vm.form.departments
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "departments", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "departments"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "trainingDate"
+    }
+  }, [_vm._v("Training Date :")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.training_date,
+      expression: "form.training_date"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("training_date")
+    },
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.form.training_date
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "training_date", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "training_date"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "expiredDate"
+    }
+  }, [_vm._v("Expired Date :")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.expired_date,
+      expression: "form.expired_date"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("expired_date")
+    },
+    attrs: {
+      type: "date",
+      disabled: ""
+    },
+    domProps: {
+      value: _vm.form.expired_date
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "expired_date", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "expired_date"
+    }
   })], 1)]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._l(_vm.form.rows, function (row, index) {
     return _c("div", {
-      key: row.id
-    }, [_c("div", {
+      key: row.id,
       staticClass: "form-group row"
     }, [_c("div", {
-      staticClass: "col-6"
+      staticClass: "col-md-6"
     }, [_c("input", {
       directives: [{
         name: "model",
@@ -3339,9 +3452,7 @@ var render = function render() {
         field: "rows." + index + ".key"
       }
     })], 1), _vm._v(" "), _c("div", {
-      staticClass: "col-6 d-flex"
-    }, [_c("div", {
-      staticClass: "col-10"
+      staticClass: "col-md-6 d-flex"
     }, [_c("input", {
       directives: [{
         name: "model",
@@ -3371,9 +3482,8 @@ var render = function render() {
         form: _vm.form,
         field: "rows." + index + ".value"
       }
-    })], 1), _vm._v(" "), _c("div", {
-      staticClass: "pl-2 mt-2"
-    }, [_c("a", {
+    }), _vm._v(" "), _c("a", {
+      staticClass: "btn btn-icon",
       attrs: {
         href: "#"
       },
@@ -3384,80 +3494,8 @@ var render = function render() {
         }
       }
     }, [_c("i", {
-      staticClass: "fas fa-minus-circle fa-lg red"
-    })])])])]), _vm._v(" "), _c("div", {
-      staticClass: "form-group row"
-    }, [_c("div", {
-      staticClass: "col-4"
-    }, [_c("label", {
-      attrs: {
-        "for": "trainingDate"
-      }
-    }, [_vm._v("Training Date :")]), _vm._v(" "), _c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: _vm.form.training_date,
-        expression: "form.training_date"
-      }],
-      staticClass: "form-control",
-      "class": {
-        "is-invalid": _vm.form.errors.has("training_date")
-      },
-      attrs: {
-        type: "date",
-        placeholder: "Select training date"
-      },
-      domProps: {
-        value: _vm.form.training_date
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(_vm.form, "training_date", $event.target.value);
-        }
-      }
-    }), _vm._v(" "), _c("has-error", {
-      attrs: {
-        form: _vm.form,
-        field: "training_date"
-      }
-    })], 1), _vm._v(" "), _c("div", {
-      staticClass: "col-4"
-    }, [_c("label", {
-      attrs: {
-        "for": "expiredDate"
-      }
-    }, [_vm._v("Expired Date :")]), _vm._v(" "), _c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: _vm.form.expired_date,
-        expression: "form.expired_date"
-      }],
-      staticClass: "form-control",
-      "class": {
-        "is-invalid": _vm.form.errors.has("expired_date")
-      },
-      attrs: {
-        type: "date",
-        disabled: ""
-      },
-      domProps: {
-        value: _vm.form.expired_date
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(_vm.form, "expired_date", $event.target.value);
-        }
-      }
-    }), _vm._v(" "), _c("has-error", {
-      attrs: {
-        form: _vm.form,
-        field: "expired_date"
-      }
-    })], 1)])]);
+      staticClass: "fas fa-minus-circle fa-lg"
+    })])], 1)]);
   }), _vm._v(" "), _c("div", {
     staticClass: "d-flex justify-content-center"
   }, [_c("a", {
@@ -3468,7 +3506,7 @@ var render = function render() {
         return _vm.addForm.apply(null, arguments);
       }
     }
-  }, [_vm._v("\n                        Add More\n                        "), _c("i", {
+  }, [_vm._v("\n                    Add More\n                    "), _c("i", {
     staticClass: "fas fa-plus-circle fa-lg blue"
   })])]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary float-right",
@@ -3481,12 +3519,16 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "w-100 row"
+    staticClass: "form-group row"
+  }, [_c("div", {
+    staticClass: "col-md-6"
   }, [_c("label", {
-    staticClass: "col-6 text-bold"
-  }, [_vm._v("Employee Name :")]), _vm._v(" "), _c("label", {
-    staticClass: "col-6 pl-5 text-bold"
-  }, [_vm._v("Employee ID :")])]);
+    staticClass: "text-bold"
+  }, [_vm._v("Employee Name :")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("label", {
+    staticClass: "text-bold"
+  }, [_vm._v("Employee ID :")])])]);
 }];
 render._withStripped = true;
 
@@ -3528,7 +3570,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-list"
-  }), _vm._v("\n                            List Item\n                        ")])], 1)])]), _vm._v(" "), _c("form", {
+  }), _vm._v("\n                        List Item\n                    ")])], 1)])]), _vm._v(" "), _c("form", {
     staticClass: "bg-white p-4",
     on: {
       submit: function submit($event) {
@@ -3539,12 +3581,12 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "form-group row"
   }, [_c("div", {
-    staticClass: "col-6"
+    staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
       "for": "name"
     }
-  }, [_vm._v("Trainer name:")]), _vm._v(" "), _c("input", {
+  }, [_vm._v("Trainer Name :")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3557,7 +3599,7 @@ var render = function render() {
     },
     attrs: {
       type: "text",
-      placeholder: "Enter employee name :"
+      placeholder: "Trainer name"
     },
     domProps: {
       value: _vm.form.name
@@ -3573,10 +3615,8 @@ var render = function render() {
       form: _vm.form,
       field: "name"
     }
-  })], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("div", {
-    staticClass: "col-6"
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
       "for": "category"
@@ -3623,13 +3663,116 @@ var render = function render() {
       form: _vm.form,
       field: "category_id"
     }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "departments"
+    }
+  }, [_vm._v("Departments :")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.departments,
+      expression: "form.departments"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("departments")
+    },
+    attrs: {
+      type: "text",
+      placeholder: "Enter departments"
+    },
+    domProps: {
+      value: _vm.form.departments
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "departments", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "departments"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "trainingDate"
+    }
+  }, [_vm._v("Training Date :")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.training_date,
+      expression: "form.training_date"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("training_date")
+    },
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.form.training_date
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "training_date", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "training_date"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "expiredDate"
+    }
+  }, [_vm._v("Expired Date :")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.expired_date,
+      expression: "form.expired_date"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("expired_date")
+    },
+    attrs: {
+      type: "date",
+      disabled: ""
+    },
+    domProps: {
+      value: _vm.form.expired_date
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "expired_date", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "expired_date"
+    }
   })], 1)]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._l(_vm.form.rows, function (row, index) {
     return _c("div", {
-      key: row.id
-    }, [_c("div", {
+      key: row.id,
       staticClass: "form-group row"
     }, [_c("div", {
-      staticClass: "col-6"
+      staticClass: "col-md-6"
     }, [_c("input", {
       directives: [{
         name: "model",
@@ -3660,9 +3803,7 @@ var render = function render() {
         field: "rows." + index + ".key"
       }
     })], 1), _vm._v(" "), _c("div", {
-      staticClass: "col-6 d-flex"
-    }, [_c("div", {
-      staticClass: "col-10"
+      staticClass: "col-md-6 d-flex"
     }, [_c("input", {
       directives: [{
         name: "model",
@@ -3692,9 +3833,8 @@ var render = function render() {
         form: _vm.form,
         field: "rows." + index + ".value"
       }
-    })], 1), _vm._v(" "), _c("div", {
-      staticClass: "pl-2 mt-2"
-    }, [_c("a", {
+    }), _vm._v(" "), _c("a", {
+      staticClass: "btn btn-icon",
       attrs: {
         href: "#"
       },
@@ -3705,80 +3845,8 @@ var render = function render() {
         }
       }
     }, [_c("i", {
-      staticClass: "fas fa-minus-circle fa-lg red"
-    })])])])]), _vm._v(" "), _c("div", {
-      staticClass: "form-group row"
-    }, [_c("div", {
-      staticClass: "col-4"
-    }, [_c("label", {
-      attrs: {
-        "for": "trainingDate"
-      }
-    }, [_vm._v("Training Date :")]), _vm._v(" "), _c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: _vm.form.training_date,
-        expression: "form.training_date"
-      }],
-      staticClass: "form-control",
-      "class": {
-        "is-invalid": _vm.form.errors.has("training_date")
-      },
-      attrs: {
-        type: "date",
-        placeholder: "Select training date"
-      },
-      domProps: {
-        value: _vm.form.training_date
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(_vm.form, "training_date", $event.target.value);
-        }
-      }
-    }), _vm._v(" "), _c("has-error", {
-      attrs: {
-        form: _vm.form,
-        field: "training_date"
-      }
-    })], 1), _vm._v(" "), _c("div", {
-      staticClass: "col-4"
-    }, [_c("label", {
-      attrs: {
-        "for": "expiredDate"
-      }
-    }, [_vm._v("Expired Date :")]), _vm._v(" "), _c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: _vm.form.expired_date,
-        expression: "form.expired_date"
-      }],
-      staticClass: "form-control",
-      "class": {
-        "is-invalid": _vm.form.errors.has("expired_date")
-      },
-      attrs: {
-        type: "date",
-        disabled: ""
-      },
-      domProps: {
-        value: _vm.form.expired_date
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(_vm.form, "expired_date", $event.target.value);
-        }
-      }
-    }), _vm._v(" "), _c("has-error", {
-      attrs: {
-        form: _vm.form,
-        field: "expired_date"
-      }
-    })], 1)])]);
+      staticClass: "fas fa-minus-circle fa-lg"
+    })])], 1)]);
   }), _vm._v(" "), _c("div", {
     staticClass: "d-flex justify-content-center"
   }, [_c("a", {
@@ -3789,7 +3857,7 @@ var render = function render() {
         return _vm.addForm.apply(null, arguments);
       }
     }
-  }, [_vm._v("\n                        Add More\n                        "), _c("i", {
+  }, [_vm._v("\n                    Add More\n                    "), _c("i", {
     staticClass: "fas fa-plus-circle fa-lg blue"
   })])]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-success float-right",
@@ -3802,12 +3870,16 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "w-100 row"
+    staticClass: "form-group row"
+  }, [_c("div", {
+    staticClass: "col-md-6"
   }, [_c("label", {
-    staticClass: "col-6 text-bold"
-  }, [_vm._v("Employee Name :")]), _vm._v(" "), _c("label", {
-    staticClass: "col-6 pl-5 text-bold"
-  }, [_vm._v("Employee ID :")])]);
+    staticClass: "text-bold"
+  }, [_vm._v("Employee Name :")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("label", {
+    staticClass: "text-bold"
+  }, [_vm._v("Employee ID :")])])]);
 }];
 render._withStripped = true;
 
