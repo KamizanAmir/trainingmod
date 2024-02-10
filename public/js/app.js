@@ -2564,6 +2564,10 @@ __webpack_require__.r(__webpack_exports__);
           title: "Item updated successfully"
         });
         _this2.$Progress.finish();
+        // Add a delay to allow the toast message to be read by the user before redirecting
+        setTimeout(function () {
+          _this2.$router.push("/items");
+        }, 2000); // Delay for 2 seconds
       })["catch"](function () {
         Swal("Failed!", "There was something wrong.", "warning");
       });
@@ -3230,7 +3234,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "form-group row"
   }, [_c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "name"
@@ -3265,7 +3269,7 @@ var render = function render() {
       field: "name"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "category"
@@ -3313,7 +3317,7 @@ var render = function render() {
       field: "category_id"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "departments"
@@ -3348,7 +3352,7 @@ var render = function render() {
       field: "departments"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "trainingDate"
@@ -3382,7 +3386,7 @@ var render = function render() {
       field: "training_date"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "expiredDate"
@@ -3581,7 +3585,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "form-group row"
   }, [_c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "name"
@@ -3616,7 +3620,7 @@ var render = function render() {
       field: "name"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "category"
@@ -3664,7 +3668,7 @@ var render = function render() {
       field: "category_id"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "departments"
@@ -3699,7 +3703,7 @@ var render = function render() {
       field: "departments"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "trainingDate"
@@ -3733,7 +3737,7 @@ var render = function render() {
       field: "training_date"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "expiredDate"

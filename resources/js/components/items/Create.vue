@@ -17,7 +17,7 @@
             <form @submit.prevent="createItem" class="bg-white p-4">
                 <div class="form-group row">
         <!-- Trainer Name -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="name">Trainer Name :</label>
             <input
                 v-model="form.name"
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Training Module -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="category">Training Module :</label>
             <select
                 v-model="form.category_id"
@@ -49,7 +49,7 @@
         </div>
 
                 <!-- Departments -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="departments">Departments :</label>
             <input
                 v-model="form.departments"
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Training Date -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="trainingDate">Training Date :</label>
             <input
                 v-model="form.training_date"
@@ -74,7 +74,7 @@
         </div>
 
         <!-- Expired Date -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="expiredDate">Expired Date :</label>
             <input
                 v-model="form.expired_date"

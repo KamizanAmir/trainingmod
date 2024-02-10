@@ -17,7 +17,7 @@
             <form @submit.prevent="editItem" class="bg-white p-4">
                 <div class="form-group row">
         <!-- Trainer Name -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="name">Trainer Name :</label>
             <input
                 v-model="form.name"
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Training Module -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="category">Training Module :</label>
             <select
                 v-model="form.category_id"
@@ -49,7 +49,7 @@
         </div>
 
                 <!-- Departments -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="departments">Departments :</label>
             <input
                 v-model="form.departments"
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Training Date -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="trainingDate">Training Date :</label>
             <input
                 v-model="form.training_date"
@@ -74,7 +74,7 @@
         </div>
 
         <!-- Expired Date -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="expiredDate">Expired Date :</label>
             <input
                 v-model="form.expired_date"
@@ -208,11 +208,16 @@ export default {
                         title: "Item updated successfully"
                     });
                     this.$Progress.finish();
+                    // Add a delay to allow the toast message to be read by the user before redirecting
+                    setTimeout(() => {
+                        this.$router.push("/items");
+                    }, 2000); // Delay for 2 seconds
                 })
                 .catch(() => {
                     Swal("Failed!", "There was something wrong.", "warning");
                 });
         }
+
     },
     mounted() {
         console.log("Component mounted.");
