@@ -27,7 +27,7 @@
                     <div class="card-body">
                         <!-- Centered Category -->
                         <h5 class="card-title">
-                            <span class="text-bold">Category :</span>
+                            <span class="text-bold">Training Module :</span>
                             <span v-if="item.category" style="color:red;">{{item.category.name}}</span>
                             <span v-else class="text-danger">May be deleted</span>
                         </h5>
