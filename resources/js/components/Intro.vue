@@ -1,77 +1,100 @@
 <template>
-    <div id="readme" class="Box-body readme blob instapaper_body js-code-block-container">
+    <div id="readme" class="box-body readme blob instapaper_body js-code-block-container">
       <article class="markdown-body entry-content p-3 p-md-6" itemprop="text">
             <!-- Section for Expired Items -->
-            <div v-if="expiredItems.length">
-            <h1 style="align-items: center; text-align: center;">Expired Items</h1>
-            <div v-for="alert in expiredItems" :key="alert.name" class="alert-container">
-                <div style="flex-grow: 1;">
-                <strong> {{ alert.name }} </strong> training for <a :href="`/items-show/${alert.id}`" style="color: red;">{{ alert.category.name }}</a> has expired on <strong style="color: red;"> {{ alert.expired_date | dFormat }} ({{ alert.propertiesCount }} employee) </strong>
-                <hr>
+            <section class="section-container">
+                <h1 style="color: white;" class="section-title">Expired Items</h1>
+                <div v-if="expiredItems.length">
+                    <div v-for="alert in expiredItems" :key="alert.name" class="alert-container">
+                <div style="flex-grow: 1; color: white;">
+                <strong style="color: white;"> {{ alert.name }} </strong> training for <a :href="`/items-show/${alert.id}`" style="color: red;">{{ alert.category.name }}</a> has expired on <strong style="color: red;"> {{ alert.expired_date | dFormat }} ({{ alert.propertiesCount }} employee) </strong>
+                
                 </div>
                 <a :href="`/items-show/${alert.id}`" class="view-button" style="white-space: nowrap;">View</a>
             </div>
-            </div>
-            <div v-else>
-                No expired items to show.
-            </div>
-            <hr>
-            <h1 style="text-align: center;">Alert</h1>
+                </div>
+                <div v-else>No expired items to show.</div>
+            </section>
             <!-- Notification Alert Section for Expiring Items -->
+            <section class="section-container">
+            <h1 style="color: white;" class="section-title">Alert</h1>
             <div v-if="expiringSoonItems.length">
             <div v-for="alert in expiringSoonItems" :key="alert.name" class="alert-container">
-                <div style="flex-grow: 1;">
+                <div style="flex-grow: 1; color: white;">
                 <strong> {{ alert.name }} </strong> training for <a :href="`/items-show/${alert.id}`" style="color: orange;">{{ alert.category.name }}</a> is expiring soon on <strong style="color: orange;"> {{ alert.expired_date | dFormat }} ({{ alert.propertiesCount }} employee)</strong>
-                <hr>
+                
                 </div>
                 <a :href="`/items-show/${alert.id}`" class="view-button" style="white-space: nowrap;">View</a>
             </div>
-            <hr>
             </div>
-            <div v-else>
-                Nothing urgent to show.
-            </div>
-            
-            <h1 style="text-align: center;">Current Records</h1>
+                <div v-else>Nothing urgent to show.</div>
+            </section>
             <!-- Section for Non-Expiring Items -->
-            <div v-if="nonExpiringItems.length">
+            <section class="section-container">
+            <h1 style="color: white;" class="section-title">Current Records</h1>
+            <div v-if="nonExpiringItems.length" >
             <div v-for="alert in nonExpiringItems" :key="alert.name" class="alert-container">
-                <div style="flex-grow: 1;">
-                <strong> {{ alert.name }} </strong> training for <a :href="`/items-show/${alert.id}`" style="color: black;">{{ alert.category.name }}</a> is valid until <strong> {{ alert.expired_date | dFormat }} ({{ alert.propertiesCount }} employee)</strong>
-                <hr>
+                <div style="flex-grow: 1; color: white;">
+                <strong> {{ alert.name }} </strong> training for <a :href="`/items-show/${alert.id}`" style="color: rgb(235, 225, 225);">{{ alert.category.name }}</a> is valid until <strong> {{ alert.expired_date | dFormat }} ({{ alert.propertiesCount }} employee)</strong>
+                
                 </div>
                 <a :href="`/items-show/${alert.id}`" class="view-button" style="padding-left: 20px;">View</a>
             </div>
             </div>
-            <div v-else>
-                No current records to show.
-            </div>
+                <div v-else>No current records to show.</div>
+            </section>
         </article>
     </div>
 </template>
 <style scoped>
+.section-container {
+  margin-bottom: 20px; /* Spacing between sections */
+  border: 1px solid #0d3f80; /* Light grey border */
+  border-radius: 6px; /* Rounded corners */
+  background-color: #343a40; /* Light grey background */
+  padding: 20px; /* Padding around the content */
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 15px; /* Spacing after the title */
+}
+
+.table-container {
+  background-color: white; /* White background for the content area */
+  border: 1px solid #ccc; /* Light border for the table/container */
+  border-radius: 4px; /* Slight rounding of corners */
+  overflow: hidden; /* Ensures no overflow of child elements */
+}
+
 .alert-container {
-  display: flex;
-  justify-content: center; /* Changed to center */
-  align-items: center;
-  margin-bottom: 10px; /* or any spacing you want between items */
-  text-align: center; /* Center align the text */
+    display: flex;
+    justify-content: center; /* Changed to center */
+    align-items: center;
+    margin-bottom: 10px; /* or any spacing you want between items */
+    text-align: center; /* Center align the text */
+}
+
+/* Ensure the last alert-container in each table-container does not have a bottom border */
+.table-container .alert-container:last-child {
+  border-bottom: none;
 }
 
 .view-button {
-  background-color: blue; /* Blue background */
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding inside the button */
-  text-align: center; /* Center text inside the button */
-  text-decoration: none; /* Remove underline from text */
-  display: inline-block; /* Allow width and height to be set */
-  font-size: 16px; /* Set font size */
-  margin: 4px 2px; /* Spacing around the button */
-  cursor: pointer; /* Change mouse cursor to pointer on hover */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
+    background-color: rgb(235, 199, 19); /* Blue background */
+    color: black; /* White text */
+    padding: 10px 20px; /* Padding inside the button */
+    text-align: center; /* Center text inside the button */
+    text-decoration: none; /* Remove underline from text */
+    display: inline-block; /* Allow width and height to be set */
+    font-size: 16px; /* Set font size */
+    margin: 4px 2px; /* Spacing around the button */
+    cursor: pointer; /* Change mouse cursor to pointer on hover */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
 }
 </style>
+
   <script>
   import axios from 'axios';
   import moment from 'moment';

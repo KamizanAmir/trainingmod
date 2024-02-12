@@ -5,9 +5,9 @@
                 <div class="card pt-2 pb-2">
                     <div class="card-header">
                         <div style="text-align: left;">
-                            <h1><strong>Employee List</strong></h1>
+                            <h1><strong>Employee Training Record</strong></h1>
                                 <h2 style="text-align: left;">
-                                    <span style="text-align: left;">Total no. of training : {{resultCount}}</span>
+                                    <span style="text-align: left;">Total number of training : {{resultCount}}</span>
                                 </h2>
                         </div>
                         <div class="card-tools mt-2">

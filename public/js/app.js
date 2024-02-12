@@ -3156,7 +3156,7 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "Box-body readme blob instapaper_body js-code-block-container",
+    staticClass: "box-body readme blob instapaper_body js-code-block-container",
     attrs: {
       id: "readme"
     }
@@ -3165,20 +3165,27 @@ var render = function render() {
     attrs: {
       itemprop: "text"
     }
-  }, [_vm.expiredItems.length ? _c("div", [_c("h1", {
+  }, [_c("section", {
+    staticClass: "section-container"
+  }, [_c("h1", {
+    staticClass: "section-title",
     staticStyle: {
-      "align-items": "center",
-      "text-align": "center"
+      color: "white"
     }
-  }, [_vm._v("Expired Items")]), _vm._v(" "), _vm._l(_vm.expiredItems, function (alert) {
+  }, [_vm._v("Expired Items")]), _vm._v(" "), _vm.expiredItems.length ? _c("div", _vm._l(_vm.expiredItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
     }, [_c("div", {
       staticStyle: {
-        "flex-grow": "1"
+        "flex-grow": "1",
+        color: "white"
       }
-    }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
+    }, [_c("strong", {
+      staticStyle: {
+        color: "white"
+      }
+    }, [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
         color: "red"
       },
@@ -3189,7 +3196,7 @@ var render = function render() {
       staticStyle: {
         color: "red"
       }
-    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee) ")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee) ")])]), _vm._v(" "), _c("a", {
       staticClass: "view-button",
       staticStyle: {
         "white-space": "nowrap"
@@ -3198,17 +3205,21 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  })], 2) : _c("div", [_vm._v("\n            No expired items to show.\n        ")]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("h1", {
+  }), 0) : _c("div", [_vm._v("No expired items to show.")])]), _vm._v(" "), _c("section", {
+    staticClass: "section-container"
+  }, [_c("h1", {
+    staticClass: "section-title",
     staticStyle: {
-      "text-align": "center"
+      color: "white"
     }
-  }, [_vm._v("Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", [_vm._l(_vm.expiringSoonItems, function (alert) {
+  }, [_vm._v("Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", _vm._l(_vm.expiringSoonItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
     }, [_c("div", {
       staticStyle: {
-        "flex-grow": "1"
+        "flex-grow": "1",
+        color: "white"
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
@@ -3221,7 +3232,7 @@ var render = function render() {
       staticStyle: {
         color: "orange"
       }
-    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")])]), _vm._v(" "), _c("a", {
       staticClass: "view-button",
       staticStyle: {
         "white-space": "nowrap"
@@ -3230,9 +3241,12 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  }), _vm._v(" "), _c("hr")], 2) : _c("div", [_vm._v("\n            Nothing urgent to show.\n        ")]), _vm._v(" "), _c("h1", {
+  }), 0) : _c("div", [_vm._v("Nothing urgent to show.")])]), _vm._v(" "), _c("section", {
+    staticClass: "section-container"
+  }, [_c("h1", {
+    staticClass: "section-title",
     staticStyle: {
-      "text-align": "center"
+      color: "white"
     }
   }, [_vm._v("Current Records")]), _vm._v(" "), _vm.nonExpiringItems.length ? _c("div", _vm._l(_vm.nonExpiringItems, function (alert) {
     return _c("div", {
@@ -3240,16 +3254,17 @@ var render = function render() {
       staticClass: "alert-container"
     }, [_c("div", {
       staticStyle: {
-        "flex-grow": "1"
+        "flex-grow": "1",
+        color: "white"
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
-        color: "black"
+        color: "rgb(235, 225, 225)"
       },
       attrs: {
         href: "/items-show/".concat(alert.id)
       }
-    }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is valid until "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+    }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is valid until "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")])]), _vm._v(" "), _c("a", {
       staticClass: "view-button",
       staticStyle: {
         "padding-left": "20px"
@@ -3258,7 +3273,7 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  }), 0) : _c("div", [_vm._v("\n            No current records to show.\n        ")])])]);
+  }), 0) : _c("div", [_vm._v("No current records to show.")])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -4053,7 +4068,7 @@ var render = function render() {
     staticStyle: {
       "text-align": "left"
     }
-  }, [_vm._v("Total no. of training : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total number of training : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -4106,7 +4121,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("h1", [_c("strong", [_vm._v("Employee List")])]);
+  return _c("h1", [_c("strong", [_vm._v("Employee Training Record")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -8584,7 +8599,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-container[data-v-0648c911] {\n  display: flex;\n  justify-content: center; /* Changed to center */\n  align-items: center;\n  margin-bottom: 10px; /* or any spacing you want between items */\n  text-align: center; /* Center align the text */\n}\n.view-button[data-v-0648c911] {\n  background-color: blue; /* Blue background */\n  color: white; /* White text */\n  padding: 10px 20px; /* Padding inside the button */\n  text-align: center; /* Center text inside the button */\n  text-decoration: none; /* Remove underline from text */\n  display: inline-block; /* Allow width and height to be set */\n  font-size: 16px; /* Set font size */\n  margin: 4px 2px; /* Spacing around the button */\n  cursor: pointer; /* Change mouse cursor to pointer on hover */\n  border: none; /* Remove border */\n  border-radius: 5px; /* Rounded corners */\n}\n", ""]);
+exports.push([module.i, "\n.section-container[data-v-0648c911] {\n  margin-bottom: 20px; /* Spacing between sections */\n  border: 1px solid #0d3f80; /* Light grey border */\n  border-radius: 6px; /* Rounded corners */\n  background-color: #343a40; /* Light grey background */\n  padding: 20px; /* Padding around the content */\n}\n.section-title[data-v-0648c911] {\n  text-align: center;\n  margin-bottom: 15px; /* Spacing after the title */\n}\n.table-container[data-v-0648c911] {\n  background-color: white; /* White background for the content area */\n  border: 1px solid #ccc; /* Light border for the table/container */\n  border-radius: 4px; /* Slight rounding of corners */\n  overflow: hidden; /* Ensures no overflow of child elements */\n}\n.alert-container[data-v-0648c911] {\n    display: flex;\n    justify-content: center; /* Changed to center */\n    align-items: center;\n    margin-bottom: 10px; /* or any spacing you want between items */\n    text-align: center; /* Center align the text */\n}\n\n/* Ensure the last alert-container in each table-container does not have a bottom border */\n.table-container .alert-container[data-v-0648c911]:last-child {\n  border-bottom: none;\n}\n.view-button[data-v-0648c911] {\n    background-color: rgb(235, 199, 19); /* Blue background */\n    color: black; /* White text */\n    padding: 10px 20px; /* Padding inside the button */\n    text-align: center; /* Center text inside the button */\n    text-decoration: none; /* Remove underline from text */\n    display: inline-block; /* Allow width and height to be set */\n    font-size: 16px; /* Set font size */\n    margin: 4px 2px; /* Spacing around the button */\n    cursor: pointer; /* Change mouse cursor to pointer on hover */\n    border: none; /* Remove border */\n    border-radius: 5px; /* Rounded corners */\n}\n", ""]);
 
 // exports
 
