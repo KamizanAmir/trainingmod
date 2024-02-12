@@ -7,7 +7,7 @@
                         <div style="text-align: left;">
                             <h1><strong>Employee List</strong></h1>
                                 <h2 style="text-align: left;">
-                                    <span style="text-align: left;">Total no. of employees : {{resultCount}}</span>
+                                    <span style="text-align: left;">Total no. of training : {{resultCount}}</span>
                                 </h2>
                         </div>
                         <div class="card-tools mt-2">

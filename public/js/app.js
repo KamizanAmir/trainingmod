@@ -2736,7 +2736,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id"],
   data: function data() {
     return {
-      item: {}
+      item: {},
+      counter: 1 // Initialize counter if you want to use it in a loop
     };
   },
   filters: {
@@ -2753,6 +2754,9 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    incrementCounter: function incrementCounter() {
+      this.counter += 1;
     }
   },
   mounted: function mounted() {
@@ -3243,7 +3247,7 @@ var render = function render() {
     staticClass: "card-header"
   }, [_c("div", {
     staticClass: "d-flex justify-content-inline"
-  }, [_c("h1", [_c("strong", [_vm._v("Training Attendee List ")]), _vm._v(" " + _vm._s(_vm.form.name))])]), _vm._v(" "), _c("div", {
+  }, [_c("h1", [_c("strong", [_vm._v("Training by ")]), _vm._v(" ( " + _vm._s(_vm.form.name) + " )")])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -3298,7 +3302,7 @@ var render = function render() {
       field: "name"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-2"
+    staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
       "for": "category"
@@ -3468,7 +3472,7 @@ var render = function render() {
       },
       attrs: {
         type: "text",
-        placeholder: "Enter attribute"
+        placeholder: "Enter employee name"
       },
       domProps: {
         value: row.key
@@ -3499,7 +3503,7 @@ var render = function render() {
       },
       attrs: {
         type: "text",
-        placeholder: "Enter values"
+        placeholder: "Enter employee ID"
       },
       domProps: {
         value: row.value
@@ -3817,7 +3821,7 @@ var render = function render() {
       },
       attrs: {
         type: "text",
-        placeholder: "Enter attribute"
+        placeholder: "Enter employee name"
       },
       domProps: {
         value: row.key
@@ -3848,7 +3852,7 @@ var render = function render() {
       },
       attrs: {
         type: "text",
-        placeholder: "Enter values"
+        placeholder: "Enter employee ID"
       },
       domProps: {
         value: row.value
@@ -3953,7 +3957,7 @@ var render = function render() {
     staticStyle: {
       "text-align": "left"
     }
-  }, [_vm._v("Total no. of employees : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total no. of training : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -4061,13 +4065,12 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "employee-info"
-  }, _vm._l(JSON.parse(_vm.item.properties), function (property) {
+  }, _vm._l(JSON.parse(_vm.item.properties), function (property, index) {
     return _c("p", {
-      key: property.id,
       staticClass: "card-text"
     }, [_c("span", {
       staticClass: "text-bold"
-    }, [_vm._v("Employee Name : ")]), _vm._v(_vm._s(property.key) + " || \n                            "), _c("span", {
+    }, [_vm._v(_vm._s(index + 1) + " - Employee Name : ")]), _vm._v(_vm._s(property.key) + " || \n                            "), _c("span", {
       staticClass: "text-bold"
     }, [_vm._v("Department:")]), _vm._v(" " + _vm._s(_vm.item.departments) + " ||\n                            "), _c("span", {
       staticClass: "text-bold"

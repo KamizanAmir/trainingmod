@@ -104,7 +104,7 @@
                             v-model="row.key"
                             type="text"
                             class="form-control"
-                            placeholder="Enter attribute"
+                            placeholder="Enter employee name"
                             :class="{ 'is-invalid': form.errors.has('rows.'+index+'.key') }"
                         >
                         <has-error :form="form" :field="'rows.'+index+'.key'"></has-error>
@@ -114,7 +114,7 @@
                             v-model="row.value"
                             type="text"
                             class="form-control"
-                            placeholder="Enter values"
+                            placeholder="Enter employee ID"
                             :class="{ 'is-invalid': form.errors.has('rows.'+index+'.value') }"
                         >
                         <has-error :form="form" :field="'rows.'+index+'.value'"></has-error>

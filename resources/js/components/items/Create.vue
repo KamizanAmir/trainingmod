@@ -4,7 +4,7 @@
             <div class="card pt-6 pb-2">
                 <div class="card-header">
                     <div class="d-flex justify-content-inline">
-                        <h1><strong>Training Attendee List </strong> {{form.name}}</h1>
+                        <h1><strong>Training by </strong> ( {{form.name}} )</h1>
                     </div>
                     <div class="card-tools mt-2">
                         <router-link to="/items" class="btn btn-success">
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Training Module -->
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label for="category">Training Module :</label>
             <select
                 v-model="form.category_id"
@@ -104,7 +104,7 @@
                 v-model="row.key"
                 type="text"
                 class="form-control"
-                placeholder="Enter attribute"
+                placeholder="Enter employee name"
                 :class="{ 'is-invalid': form.errors.has('rows.'+index+'.key') }"
             >
             <has-error :form="form" :field="'rows.'+index+'.key'"></has-error>
@@ -114,7 +114,7 @@
                 v-model="row.value"
                 type="text"
                 class="form-control"
-                placeholder="Enter values"
+                placeholder="Enter employee ID"
                 :class="{ 'is-invalid': form.errors.has('rows.'+index+'.value') }"
             >
             <has-error :form="form" :field="'rows.'+index+'.value'"></has-error>
