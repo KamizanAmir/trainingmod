@@ -2329,6 +2329,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2378,7 +2384,11 @@ __webpack_require__.r(__webpack_exports__);
     fetchExpiringItems: function fetchExpiringItems() {
       var _this3 = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/items/').then(function (response) {
-        _this3.alerts = response.data;
+        _this3.alerts = response.data.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            propertiesCount: JSON.parse(item.properties).length // Assuming 'properties' is an array
+          });
+        });
         _this3.alerts.sort(function (a, b) {
           return new Date(a.expired_date) - new Date(b.expired_date);
         });
@@ -3155,7 +3165,12 @@ var render = function render() {
     attrs: {
       itemprop: "text"
     }
-  }, [_vm.expiredItems.length ? _c("div", [_c("h1", [_vm._v("Expired Items")]), _vm._v(" "), _vm._l(_vm.expiredItems, function (alert) {
+  }, [_vm.expiredItems.length ? _c("div", [_c("h1", {
+    staticStyle: {
+      "align-items": "center",
+      "text-align": "center"
+    }
+  }, [_vm._v("Expired Items")]), _vm._v(" "), _vm._l(_vm.expiredItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
@@ -3165,7 +3180,7 @@ var render = function render() {
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
-        color: "blue"
+        color: "red"
       },
       attrs: {
         href: "/items-show/".concat(alert.id)
@@ -3174,7 +3189,8 @@ var render = function render() {
       staticStyle: {
         color: "red"
       }
-    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")])]), _vm._v(" "), _c("a", {
+    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee) ")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+      staticClass: "view-button",
       staticStyle: {
         "white-space": "nowrap"
       },
@@ -3182,7 +3198,11 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  })], 2) : _c("div", [_vm._v("\n            No expired items to show.\n        ")]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("h1", [_vm._v("Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", [_vm._l(_vm.expiringSoonItems, function (alert) {
+  })], 2) : _c("div", [_vm._v("\n            No expired items to show.\n        ")]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("h1", {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_vm._v("Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", [_vm._l(_vm.expiringSoonItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
@@ -3192,16 +3212,17 @@ var render = function render() {
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
-        color: "blue"
+        color: "orange"
       },
       attrs: {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is expiring soon on "), _c("strong", {
       staticStyle: {
-        color: "red"
+        color: "orange"
       }
-    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")])]), _vm._v(" "), _c("a", {
+    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+      staticClass: "view-button",
       staticStyle: {
         "white-space": "nowrap"
       },
@@ -3209,7 +3230,11 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  }), _vm._v(" "), _c("hr")], 2) : _c("div", [_vm._v("\n            Nothing urgent to show.\n        ")]), _vm._v(" "), _c("h1", [_vm._v("Current Records")]), _vm._v(" "), _vm.nonExpiringItems.length ? _c("div", _vm._l(_vm.nonExpiringItems, function (alert) {
+  }), _vm._v(" "), _c("hr")], 2) : _c("div", [_vm._v("\n            Nothing urgent to show.\n        ")]), _vm._v(" "), _c("h1", {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_vm._v("Current Records")]), _vm._v(" "), _vm.nonExpiringItems.length ? _c("div", _vm._l(_vm.nonExpiringItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
@@ -3219,12 +3244,13 @@ var render = function render() {
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
-        color: "blue"
+        color: "black"
       },
       attrs: {
         href: "/items-show/".concat(alert.id)
       }
-    }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is valid until "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")])]), _vm._v(" "), _c("a", {
+    }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is valid until "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+      staticClass: "view-button",
       staticStyle: {
         "padding-left": "20px"
       },
@@ -8558,7 +8584,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-container[data-v-0648c911] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 10px; /* or any spacing you want between items */\n}\n", ""]);
+exports.push([module.i, "\n.alert-container[data-v-0648c911] {\n  display: flex;\n  justify-content: center; /* Changed to center */\n  align-items: center;\n  margin-bottom: 10px; /* or any spacing you want between items */\n  text-align: center; /* Center align the text */\n}\n.view-button[data-v-0648c911] {\n  background-color: blue; /* Blue background */\n  color: white; /* White text */\n  padding: 10px 20px; /* Padding inside the button */\n  text-align: center; /* Center text inside the button */\n  text-decoration: none; /* Remove underline from text */\n  display: inline-block; /* Allow width and height to be set */\n  font-size: 16px; /* Set font size */\n  margin: 4px 2px; /* Spacing around the button */\n  cursor: pointer; /* Change mouse cursor to pointer on hover */\n  border: none; /* Remove border */\n  border-radius: 5px; /* Rounded corners */\n}\n", ""]);
 
 // exports
 
