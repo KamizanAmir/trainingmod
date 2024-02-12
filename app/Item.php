@@ -12,10 +12,10 @@ class Item extends Model
         "category_id", 
         "properties",
         "departments",
-        'training_date',
-        'expired_date',
+        "training_date",
+        "expired_date",
     ];
-
+    
     public function category()
     {
         return $this->belongsTo(Category::class);

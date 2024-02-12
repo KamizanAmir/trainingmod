@@ -2325,24 +2325,40 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      expiringItems: []
+      alerts: []
     };
   },
-  mounted: function mounted() {
-    this.checkExpiringItems();
+  created: function created() {
+    this.fetchExpiringItems();
+  },
+  filters: {
+    dFormat: function dFormat(value) {
+      return moment__WEBPACK_IMPORTED_MODULE_1___default()(String(value)).format('DD-MM-YYYY');
+    }
   },
   methods: {
-    checkExpiringItems: function checkExpiringItems() {
+    fetchExpiringItems: function fetchExpiringItems() {
       var _this = this;
-      // Example API call, adjust the URL as necessary
-      axios.get('/api/expiring-items').then(function (response) {
-        _this.expiringItems = response.data;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/items/').then(function (response) {
+        _this.alerts = response.data;
       })["catch"](function (error) {
-        console.error("There was an error fetching the expiring items:", error);
+        console.error('There was an error fetching the expiring items', error);
       });
+    },
+    isExpiringSoon: function isExpiringSoon(expiredDate) {
+      var today = moment__WEBPACK_IMPORTED_MODULE_1___default()();
+      var expiryDate = moment__WEBPACK_IMPORTED_MODULE_1___default()(expiredDate);
+      var diffDays = expiryDate.diff(today, 'days');
+      return diffDays <= 3;
     }
   }
 });
@@ -2401,6 +2417,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2455,13 +2477,18 @@ __webpack_require__.r(__webpack_exports__);
     createItem: function createItem() {
       var _this2 = this;
       this.$Progress.start();
+
+      // Format the training_date to d-m-Y
+      var formattedTrainingDate = this.formatDate(this.form.training_date);
+      var formattedExpiredDate = this.formatDate(this.form.expired_date);
       this.form.post("/api/items", {
         name: this.form.name,
         category_id: this.form.category_id,
-        training_date: this.form.training_date,
-        expired_date: this.form.expired_date,
-        departments: this.form.departments // Make sure this line is added
-        // Include any other necessary fields
+        training_date: formattedTrainingDate,
+        // Use the formatted date
+        expired_date: formattedExpiredDate,
+        // Use the formatted date for expired_date as well
+        departments: this.form.departments
       }).then(function () {
         Toast.fire({
           type: "success",
@@ -2469,6 +2496,15 @@ __webpack_require__.r(__webpack_exports__);
         });
         _this2.$Progress.finish();
       })["catch"](function () {});
+    },
+    // Helper method to format date from Y-m-d to d-m-Y
+    formatDate: function formatDate(dateString) {
+      var _dateString$split = dateString.split('-'),
+        _dateString$split2 = _slicedToArray(_dateString$split, 3),
+        year = _dateString$split2[0],
+        month = _dateString$split2[1],
+        day = _dateString$split2[2];
+      return "".concat(day, "-").concat(month, "-").concat(year);
     }
   },
   mounted: function mounted() {
@@ -2567,7 +2603,7 @@ __webpack_require__.r(__webpack_exports__);
         // Add a delay to allow the toast message to be read by the user before redirecting
         setTimeout(function () {
           _this2.$router.push("/items");
-        }, 2000); // Delay for 2 seconds
+        }, 1000); // Delay for 2 seconds
       })["catch"](function () {
         Swal("Failed!", "There was something wrong.", "warning");
       });
@@ -3104,11 +3140,14 @@ var render = function render() {
       "fill-rule": "evenodd",
       d: "M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"
     }
-  })])]), _vm._v("Simple Dashboard and Alert\n        ")]), _vm._v(" "), _vm.expiringItems.length ? _c("div", [_c("ul", _vm._l(_vm.expiringItems, function (item) {
-    return _c("li", {
-      key: item.id
-    }, [_vm._v(_vm._s(_vm.items.name) + " is expiring soon.")]);
-  }), 0)]) : _c("div", [_vm._v("\n            No new alert.\n        ")]), _vm._v(" "), _c("h1", [_c("a", {
+  })])]), _vm._v("Simple Dashboard and Alert\n        ")]), _vm._v(" "), _vm.alerts.length ? _c("div", _vm._l(_vm.alerts, function (alert) {
+    return _c("div", {
+      key: alert.name,
+      style: _vm.isExpiringSoon(alert.expired_date) ? {
+        color: "red"
+      } : {}
+    }, [_vm._v("\n                ( "), _c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" ) is expiring on "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")])]);
+  }), 0) : _c("div", [_vm._v("\n            Nothing to show.\n        ")]), _vm._v(" "), _c("h1", [_c("a", {
     staticClass: "anchor",
     attrs: {
       id: "user-content-project-objectives",
@@ -3563,9 +3602,7 @@ var render = function render() {
     staticClass: "card-header"
   }, [_c("div", {
     staticClass: "d-flex justify-content-inline"
-  }, [_c("h3", {
-    staticClass: "card-title mt-2"
-  }, [_vm._v("You are editing item : " + _vm._s(_vm.form.name))])]), _vm._v(" "), _c("div", {
+  }, [_c("h1", [_c("strong", [_vm._v("Currently modify : ")]), _vm._v(" " + _vm._s(_vm.form.name))])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -4040,9 +4077,11 @@ var render = function render() {
       staticClass: "card-text"
     }, [_c("span", {
       staticClass: "text-bold"
-    }, [_vm._v("Employee Name : ")]), _vm._v("\n                        " + _vm._s(property.key) + " || "), _c("span", {
+    }, [_vm._v("Employee Name : ")]), _vm._v(_vm._s(property.key) + " || \n                            "), _c("span", {
       staticClass: "text-bold"
-    }, [_vm._v("Employee ID :")]), _vm._v("\n                        " + _vm._s(property.value))]);
+    }, [_vm._v("Department:")]), _vm._v(" " + _vm._s(_vm.item.departments) + " ||\n                            "), _c("span", {
+      staticClass: "text-bold"
+    }, [_vm._v("Employee ID :")]), _vm._v(_vm._s(property.value) + " \n                        ")]);
   }), 0), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "dates-info"
   }, [_c("p", {

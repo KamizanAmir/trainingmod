@@ -24,13 +24,13 @@
                 </a>Simple Dashboard and Alert
             </h1>
             <!-- Notification Alert Section -->
-            <div v-if="expiringItems.length">
-                <ul>
-                    <li v-for="item in expiringItems" :key="item.id">{{ items.name }} is expiring soon.</li>
-                </ul>
+            <div v-if="alerts.length">
+                <div v-for="alert in alerts" :key="alert.name" :style="isExpiringSoon(alert.expired_date) ? {color: 'red'} : {}">
+                    ( <strong> {{ alert.name }} </strong> ) is expiring on <strong> {{ alert.expired_date | dFormat }} </strong>
+                </div>
             </div>
             <div v-else>
-                No new alert.
+                Nothing to show.
             </div>
             <h1>
                 <a
@@ -58,26 +58,39 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
+import moment from 'moment';
 export default {
     data() {
         return {
-            expiringItems: []
+            alerts: []
         }
     },
-    mounted() {
-        this.checkExpiringItems();
+    created() {
+        this.fetchExpiringItems();
+    },
+    filters: {
+        dFormat(value) {
+            return moment(String(value)).format('DD-MM-YYYY');
+        }
     },
     methods: {
-        checkExpiringItems() {
-            // Example API call, adjust the URL as necessary
-            axios.get('/api/expiring-items')
+        fetchExpiringItems() {
+            axios.get('/api/items/')
                 .then(response => {
-                    this.expiringItems = response.data;
+                    this.alerts = response.data;
                 })
                 .catch(error => {
-                    console.error("There was an error fetching the expiring items:", error);
+                    console.error('There was an error fetching the expiring items', error);
                 });
-        }
+        },
+        isExpiringSoon(expiredDate) {
+            const today = moment();
+            const expiryDate = moment(expiredDate);
+            const diffDays = expiryDate.diff(today, 'days');
+            return diffDays <= 3;
+        },
     }
+
 }
 </script>

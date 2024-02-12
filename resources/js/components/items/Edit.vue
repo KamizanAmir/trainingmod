@@ -4,7 +4,7 @@
             <div class="card pt-6 pb-2">
                 <div class="card-header">
                     <div class="d-flex justify-content-inline">
-                        <h3 class="card-title mt-2">You are editing item : {{form.name}}</h3>
+                        <h1><strong>Currently modify : </strong> {{form.name}}</h1>
                     </div>
                     <div class="card-tools mt-2">
                         <router-link to="/items" class="btn btn-success">
@@ -16,113 +16,113 @@
             </div>
             <form @submit.prevent="editItem" class="bg-white p-4">
                 <div class="form-group row">
-        <!-- Trainer Name -->
-        <div class="col-md-2">
-            <label for="name">Trainer Name :</label>
-            <input
-                v-model="form.name"
-                type="text"
-                class="form-control"
-                placeholder="Trainer name"
-                :class="{ 'is-invalid': form.errors.has('name') }"
-            >
-            <has-error :form="form" field="name"></has-error>
-        </div>
+                    <!-- Trainer Name -->
+                    <div class="col-md-2">
+                        <label for="name">Trainer Name :</label>
+                        <input
+                            v-model="form.name"
+                            type="text"
+                            class="form-control"
+                            placeholder="Trainer name"
+                            :class="{ 'is-invalid': form.errors.has('name') }"
+                        >
+                        <has-error :form="form" field="name"></has-error>
+                    </div>
 
-        <!-- Training Module -->
-        <div class="col-md-2">
-            <label for="category">Training Module :</label>
-            <select
-                v-model="form.category_id"
-                name="category"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.has('category_id') }"
-            >
-                <option value="null" disabled>Select a module</option>
-                <option
-                    v-for="category in categories"
-                    :key="category.id"
-                    :value="category.id"
-                >{{ category.name }}</option>
-            </select>
-            <has-error :form="form" field="category_id"></has-error>
-        </div>
+                    <!-- Training Module -->
+                    <div class="col-md-2">
+                        <label for="category">Training Module :</label>
+                        <select
+                            v-model="form.category_id"
+                            name="category"
+                            class="form-control"
+                            :class="{ 'is-invalid': form.errors.has('category_id') }"
+                        >
+                            <option value="null" disabled>Select a module</option>
+                            <option
+                                v-for="category in categories"
+                                :key="category.id"
+                                :value="category.id"
+                            >{{ category.name }}</option>
+                        </select>
+                        <has-error :form="form" field="category_id"></has-error>
+                    </div>
 
-                <!-- Departments -->
-        <div class="col-md-2">
-            <label for="departments">Departments :</label>
-            <input
-                v-model="form.departments"
-                type="text"
-                class="form-control"
-                placeholder="Enter departments"
-                :class="{ 'is-invalid': form.errors.has('departments') }"
-            >
-            <has-error :form="form" field="departments"></has-error>
-        </div>
+                            <!-- Departments -->
+                    <div class="col-md-2">
+                        <label for="departments">Departments :</label>
+                        <input
+                            v-model="form.departments"
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter departments"
+                            :class="{ 'is-invalid': form.errors.has('departments') }"
+                        >
+                        <has-error :form="form" field="departments"></has-error>
+                    </div>
 
-        <!-- Training Date -->
-        <div class="col-md-2">
-            <label for="trainingDate">Training Date :</label>
-            <input
-                v-model="form.training_date"
-                type="date"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.has('training_date') }"
-            >
-            <has-error :form="form" field="training_date"></has-error>
-        </div>
+                    <!-- Training Date -->
+                    <div class="col-md-2">
+                        <label for="trainingDate">Training Date :</label>
+                        <input
+                            v-model="form.training_date"
+                            type="date"
+                            class="form-control"
+                            :class="{ 'is-invalid': form.errors.has('training_date') }"
+                        >
+                        <has-error :form="form" field="training_date"></has-error>
+                    </div>
 
-        <!-- Expired Date -->
-        <div class="col-md-2">
-            <label for="expiredDate">Expired Date :</label>
-            <input
-                v-model="form.expired_date"
-                type="date"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.has('expired_date') }"
-                disabled
-            >
-            <has-error :form="form" field="expired_date"></has-error>
-        </div>
-    </div>
+                    <!-- Expired Date -->
+                    <div class="col-md-2">
+                        <label for="expiredDate">Expired Date :</label>
+                        <input
+                            v-model="form.expired_date"
+                            type="date"
+                            class="form-control"
+                            :class="{ 'is-invalid': form.errors.has('expired_date') }"
+                            disabled
+                        >
+                        <has-error :form="form" field="expired_date"></has-error>
+                    </div>
+                </div>
 
-    <!-- Employee Name and Employee ID -->
-    <div class="form-group row">
-        <div class="col-md-6">
-            <label class="text-bold">Employee Name :</label>
-        </div>
-        <div class="col-md-6">
-            <label class="text-bold">Employee ID :</label>
-        </div>
-    </div>
+                <!-- Employee Name and Employee ID -->
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label class="text-bold">Employee Name :</label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-bold">Employee ID :</label>
+                    </div>
+                </div>
 
-    <!-- Employee Name and Employee ID Input Fields -->
-    <div v-for="(row,index) in form.rows" :key="row.id" class="form-group row">
-        <div class="col-md-6">
-            <input
-                v-model="row.key"
-                type="text"
-                class="form-control"
-                placeholder="Enter attribute"
-                :class="{ 'is-invalid': form.errors.has('rows.'+index+'.key') }"
-            >
-            <has-error :form="form" :field="'rows.'+index+'.key'"></has-error>
-        </div>
-        <div class="col-md-6 d-flex">
-            <input
-                v-model="row.value"
-                type="text"
-                class="form-control"
-                placeholder="Enter values"
-                :class="{ 'is-invalid': form.errors.has('rows.'+index+'.value') }"
-            >
-            <has-error :form="form" :field="'rows.'+index+'.value'"></has-error>
-            <a href="#" @click.prevent="removeItem(row.id)" class="btn btn-icon">
-                <i class="fas fa-minus-circle fa-lg"></i>
-            </a>
-        </div>
-    </div>
+                <!-- Employee Name and Employee ID Input Fields -->
+                <div v-for="(row,index) in form.rows" :key="row.id" class="form-group row">
+                    <div class="col-md-6">
+                        <input
+                            v-model="row.key"
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter attribute"
+                            :class="{ 'is-invalid': form.errors.has('rows.'+index+'.key') }"
+                        >
+                        <has-error :form="form" :field="'rows.'+index+'.key'"></has-error>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <input
+                            v-model="row.value"
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter values"
+                            :class="{ 'is-invalid': form.errors.has('rows.'+index+'.value') }"
+                        >
+                        <has-error :form="form" :field="'rows.'+index+'.value'"></has-error>
+                        <a href="#" @click.prevent="removeItem(row.id)" class="btn btn-icon">
+                            <i class="fas fa-minus-circle fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
                 <div class="d-flex justify-content-center">
                     <a @click.prevent="addForm" class="btn bnt-lg btn-outline-success">
                         Add More
@@ -211,7 +211,7 @@ export default {
                     // Add a delay to allow the toast message to be read by the user before redirecting
                     setTimeout(() => {
                         this.$router.push("/items");
-                    }, 2000); // Delay for 2 seconds
+                    }, 1000); // Delay for 2 seconds
                 })
                 .catch(() => {
                     Swal("Failed!", "There was something wrong.", "warning");

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-// use Illuminate\Routing\Route;
+use App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('/items/expiring', 'API\ItemController@getExpiringItems');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

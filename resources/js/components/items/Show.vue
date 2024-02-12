@@ -33,14 +33,15 @@
                         </h5>
                         <hr style="margin-top: 25px;"> <!-- Divider -->
                         <div class="employee-info">
-                            <p
-                                class="card-text"
-                                v-for="property in JSON.parse(item.properties)"
-                                :key="property.id"
-                            ><span class="text-bold">Employee Name : </span>
-                            {{property.key}} || <span class="text-bold">Employee ID :</span>
-                            {{property.value}}</p>
+                            <p class="card-text"
+                            v-for="property in JSON.parse(item.properties)"
+                            :key="property.id">
+                                <span class="text-bold">Employee Name : </span>{{ property.key }} || 
+                                <span class="text-bold">Department:</span> {{ item.departments }} ||
+                                <span class="text-bold">Employee ID :</span>{{ property.value }} 
+                            </p>
                         </div>
+
                         <hr> <!-- Divider -->
                         <div class="dates-info">
                             <!-- Display Training Date -->

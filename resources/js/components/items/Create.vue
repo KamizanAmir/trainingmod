@@ -178,14 +178,18 @@ export default {
         },
         createItem() {
             this.$Progress.start();
+
+            // Format the training_date to d-m-Y
+            const formattedTrainingDate = this.formatDate(this.form.training_date);
+            const formattedExpiredDate = this.formatDate(this.form.expired_date);
+
             this.form
                 .post("/api/items", {
                     name: this.form.name,
                     category_id: this.form.category_id,
-                    training_date: this.form.training_date,
-                    expired_date: this.form.expired_date,
-                    departments: this.form.departments, // Make sure this line is added
-                    // Include any other necessary fields
+                    training_date: formattedTrainingDate, // Use the formatted date
+                    expired_date: formattedExpiredDate, // Use the formatted date for expired_date as well
+                    departments: this.form.departments,
                 })
                 .then(() => {
                     Toast.fire({
@@ -195,7 +199,14 @@ export default {
                     this.$Progress.finish();
                 })
                 .catch(() => {});
-        }
+        },
+
+        // Helper method to format date from Y-m-d to d-m-Y
+        formatDate(dateString) {
+            const [year, month, day] = dateString.split('-');
+            return `${day}-${month}-${year}`;
+        },
+
     },
     mounted() {
         console.log("Component mounted.");
