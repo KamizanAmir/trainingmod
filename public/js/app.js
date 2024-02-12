@@ -2345,11 +2345,25 @@ __webpack_require__.r(__webpack_exports__);
       return moment__WEBPACK_IMPORTED_MODULE_1___default()(String(value)).format('DD-MM-YYYY');
     }
   },
+  computed: {
+    expiringSoonItems: function expiringSoonItems() {
+      var _this = this;
+      return this.alerts.filter(function (alert) {
+        return _this.isExpiringSoon(alert.expired_date);
+      });
+    },
+    nonExpiringItems: function nonExpiringItems() {
+      var _this2 = this;
+      return this.alerts.filter(function (alert) {
+        return !_this2.isExpiringSoon(alert.expired_date);
+      });
+    }
+  },
   methods: {
     fetchExpiringItems: function fetchExpiringItems() {
-      var _this = this;
+      var _this3 = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/items/').then(function (response) {
-        _this.alerts = response.data;
+        _this3.alerts = response.data;
       })["catch"](function (error) {
         console.error('There was an error fetching the expiring items', error);
       });
@@ -3119,56 +3133,32 @@ var render = function render() {
     attrs: {
       itemprop: "text"
     }
-  }, [_c("h1", [_c("a", {
-    staticClass: "anchor",
-    attrs: {
-      id: "user-content-project-introduction",
-      "aria-hidden": "true",
-      href: "#project-introduction"
-    }
-  }, [_c("svg", {
-    staticClass: "octicon octicon-link",
-    attrs: {
-      viewBox: "0 0 16 16",
-      version: "1.1",
-      width: "16",
-      height: "16",
-      "aria-hidden": "true"
-    }
-  }, [_c("path", {
-    attrs: {
-      "fill-rule": "evenodd",
-      d: "M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"
-    }
-  })])]), _vm._v("Simple Dashboard and Alert\n        ")]), _vm._v(" "), _vm.alerts.length ? _c("div", _vm._l(_vm.alerts, function (alert) {
+  }, [_c("h1", [_vm._v("Simple Dashboard and Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", _vm._l(_vm.expiringSoonItems, function (alert) {
     return _c("div", {
       key: alert.name,
-      style: _vm.isExpiringSoon(alert.expired_date) ? {
+      staticStyle: {
         color: "red"
-      } : {}
-    }, [_vm._v("\n                ( "), _c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" ) is expiring on "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")])]);
-  }), 0) : _c("div", [_vm._v("\n            Nothing to show.\n        ")]), _vm._v(" "), _c("h1", [_c("a", {
-    staticClass: "anchor",
-    attrs: {
-      id: "user-content-project-objectives",
-      "aria-hidden": "true",
-      href: "#project-objectives"
-    }
-  }, [_c("svg", {
-    staticClass: "octicon octicon-link",
-    attrs: {
-      viewBox: "0 0 16 16",
-      version: "1.1",
-      width: "16",
-      height: "16",
-      "aria-hidden": "true"
-    }
-  }, [_c("path", {
-    attrs: {
-      "fill-rule": "evenodd",
-      d: "M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"
-    }
-  })])]), _vm._v("Current Record\n        ")])])]);
+      }
+    }, [_vm._v("\n        ( "), _c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training) is expiring on "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")]), _vm._v(" "), _c("a", {
+      staticStyle: {
+        "padding-left": "20px"
+      },
+      attrs: {
+        href: "/items-show/".concat(alert.id)
+      }
+    }, [_vm._v("View")])]);
+  }), 0) : _c("div", [_vm._v("\n      Nothing urgent to show.\n    ")]), _vm._v(" "), _c("h1", [_vm._v("Current Records")]), _vm._v(" "), _vm.nonExpiringItems.length ? _c("div", _vm._l(_vm.nonExpiringItems, function (alert) {
+    return _c("div", {
+      key: alert.name
+    }, [_vm._v("\n        ( "), _c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training) is expiring on "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " ")]), _vm._v(" "), _c("a", {
+      staticStyle: {
+        "padding-left": "20px"
+      },
+      attrs: {
+        href: "/items-show/".concat(alert.id)
+      }
+    }, [_vm._v("View")])]);
+  }), 0) : _c("div", [_vm._v("\n      No current records to show.\n    ")])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -4092,12 +4082,22 @@ var render = function render() {
     staticClass: "card-text"
   }, [_c("span", {
     staticClass: "text-bold"
-  }, [_vm._v("Expired Date:")]), _vm._v("\n                            " + _vm._s(_vm._f("dFormat")(_vm.item.expired_date)) + "\n                        ")])]), _vm._v(" "), _c("router-link", {
+  }, [_vm._v("Expired Date:")]), _vm._v("\n                            " + _vm._s(_vm._f("dFormat")(_vm.item.expired_date)) + "\n                        ")])]), _vm._v(" "), _c("div", {
+    staticClass: "button-group",
+    staticStyle: {
+      "margin-top": "1rem"
+    }
+  }, [_c("router-link", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      to: "/intro"
+    }
+  }, [_vm._v("Home")]), _vm._v(" "), _c("router-link", {
     staticClass: "btn btn-primary",
     attrs: {
       to: "/items-edit/" + _vm.item.id
     }
-  }, [_vm._v("Edit Item")])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("Edit Item")])], 1)]), _vm._v(" "), _c("div", {
     staticClass: "card-footer text-muted"
   }, [_vm._v(_vm._s(_vm._f("dFormat")(_vm.item.created_at)))])])])])]);
 };

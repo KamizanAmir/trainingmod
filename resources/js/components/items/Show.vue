@@ -55,7 +55,10 @@
                                 {{ item.expired_date | dFormat }}
                             </p>
                         </div>
-                        <router-link :to="'/items-edit/'+item.id" class="btn btn-primary">Edit Item</router-link>
+                        <div class="button-group" style="margin-top: 1rem;"> <!-- Button group for alignment -->
+                            <router-link to="/intro" class="btn btn-secondary">Home</router-link> <!-- Home button -->
+                            <router-link :to="'/items-edit/'+item.id" class="btn btn-primary">Edit Item</router-link>
+                        </div>
                     </div>
                     <div class="card-footer text-muted">{{item.created_at | dFormat}}</div>
                 </div>
