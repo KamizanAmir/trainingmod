@@ -9,5 +9,9 @@ Auth::routes(['register' => true]); // Kamizan check sini untuk disable register
 
 Route::get('{parh}', 'HomeController@index')->where('path', '([A-z\d-\/_.]+)?');
 Route::fallback(function () {
-    return view('home');
+    return view('intro');
 });
+Route::get('/{any}', function () {
+    return view('/intro');
+})->where('any', '.*');
+

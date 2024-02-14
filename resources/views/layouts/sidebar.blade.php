@@ -1,13 +1,3 @@
-<style>
-        .main-sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 999;
-            overflow-y: auto;
-        }
-</style>
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -51,6 +41,12 @@
                             <router-link to="/items" class="nav-link">
                                 <i class="fa fa-check-square nav-icon yellow"></i>
                                 <p>Employee Records</p>
+                            </router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link to="/files" class="nav-link">
+                                <i class="fa fa-file nav-icon white"></i>
+                                <p>Add Training Powerpoint</p>
                             </router-link>
                         </li>
                     </ul>

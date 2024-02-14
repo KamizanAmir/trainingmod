@@ -8,13 +8,16 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">
-                            <span class="text-bold">Items related to this category :</span>
+                            <span class="text-bold">Current trainer for this module :</span>
                         </h5>
                         <ul class="card-text" v-for="item in category.item" :key="item.id">
                             <li>
                                 <router-link :to="'/items-show/'+item.id">{{item.name}}</router-link>
                             </li>
                         </ul>
+                        <div class="button-group" style="margin-top: 1rem;"> <!-- Button group for alignment -->
+                            <router-link to="/category" class="btn btn-secondary">Back</router-link> <!-- Home button -->
+                        </div>
                     </div>
                     <div class="card-footer text-muted">{{category.created_at | dFormat}}</div>
                 </div>

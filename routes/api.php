@@ -14,6 +14,10 @@ use App\Http\Controllers\ItemController;
 |
 */
 
+// If you're using Laravel 8 and above, which supports namespaced routes out of the box
+
+// If you're placing the FilesController directly under App\Http\Controllers, adjust the use statement accordingly.
+
 Route::get('/items/expiring', 'API\ItemController@getExpiringItems');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

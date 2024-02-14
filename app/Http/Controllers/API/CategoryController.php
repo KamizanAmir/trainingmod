@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         return CategoryResource::collection($this->repository->all());
         $categories = Category::query()
-        ->select('id', 'name', 'count', 'created_at', 'updated_at', 't_name') // add 't_name' here
+        ->select('id', 'name', 'count', 'created_at', 'updated_at', 't_name')
         ->get();
 
     return response()->json($categories);
@@ -46,7 +46,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            't_name' => 'required', // Validate t_name
+            't_name' => 'required',
             // other validation rules...
         ]);
     
