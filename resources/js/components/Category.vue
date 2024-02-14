@@ -27,7 +27,7 @@
                                 <tr>
                                     <th>Training name</th>
                                     <th>Prepared By</th>
-                                    <th>Total of Training</th> <!--Column inside website-->
+                                    <th>No of employees</th> <!--Column inside website-->
                                     <th>Created at</th>
                                     <th>Updated at</th>
                                     <th class="text-right">Action</th>

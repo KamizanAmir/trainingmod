@@ -1,17 +1,19 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\FileUploadController;
 
 Route::get('/', function () {
     return redirect()->to('/intro');
 });
+Route::post('/api/upload', 'API\FileUploadController@upload');
+// Add new routes for retrieving files
+Route::get('api/files', [FileUploadController::class, 'listFiles']);
+Route::get('api/files/{id}', [FileUploadController::class, 'getFile']);
 
 Auth::routes(['register' => true]); // Kamizan check sini untuk disable register
 
 Route::get('{parh}', 'HomeController@index')->where('path', '([A-z\d-\/_.]+)?');
 Route::fallback(function () {
-    return view('intro');
+    return view('home');
 });
-Route::get('/{any}', function () {
-    return view('/intro');
-})->where('any', '.*');
-

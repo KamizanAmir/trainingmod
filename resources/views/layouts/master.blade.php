@@ -49,21 +49,27 @@
     <!-- ./wrapper -->
     <script src="\js\app.js"></script>
     <script>
-    function updateDateTime() {
-        const now = new Date();
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const day = days[now.getDay()];
-        const date = now.toLocaleDateString('en-US');
-        const time = now.toLocaleTimeString('en-US');
-        const dateTimeFormat = `${day} [ ${date} ${time} ]`;
-        document.getElementById('datetime').innerHTML = dateTimeFormat;
-    }
+        function updateDateTime() {
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const day = days[now.getDay()];
+            
+            // Manually constructing the date string in D-M-YYYY format with leading zeros
+            const date = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed in JavaScript, pad with leading zero
+            const year = now.getFullYear();
+            const dateString = `${date}-${month}-${year}`;
+            
+            const time = now.toLocaleTimeString('en-US');
+            const dateTimeFormat = `${day} [ ${dateString} ${time} ]`;
+            document.getElementById('datetime').innerHTML = dateTimeFormat;
+        }
 
-    // Call the function to update date and time on page load
-    updateDateTime();
+        // Call the function to update date and time on page load
+        updateDateTime();
 
-    // Optional: Update the date and time every minute if you want it to stay current
-    setInterval(updateDateTime, 1000);
+        // Optional: Update the date and time every minute if you want it to stay current
+        setInterval(updateDateTime, 1000);
     </script>
 
 </body>

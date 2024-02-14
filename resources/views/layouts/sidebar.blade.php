@@ -44,9 +44,9 @@
                             </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link to="/files" class="nav-link">
+                            <router-link to="/upload" class="nav-link">
                                 <i class="fa fa-file nav-icon white"></i>
-                                <p>Add Training Powerpoint</p>
+                                <p>File Upload</p>
                             </router-link>
                         </li>
                     </ul>

@@ -34,8 +34,9 @@ let routes = [{
         component: require('./components/items/Index.vue').default
     },
     {
-        path: '/files',
-        component: require('./components/Files.vue').default
+        path: '/upload',
+        component: require('./components/FileUpload.vue').default,
+        name: 'upload'
     },
     {
         path: '/items-create',

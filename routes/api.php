@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\API\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +15,7 @@ use App\Http\Controllers\ItemController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-// If you're using Laravel 8 and above, which supports namespaced routes out of the box
-
-// If you're placing the FilesController directly under App\Http\Controllers, adjust the use statement accordingly.
-
+Route::post('/api/upload', 'API\FileUploadController@upload');
 Route::get('/items/expiring', 'API\ItemController@getExpiringItems');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
