@@ -13,4 +13,8 @@ class File extends Model
         'mime', 
         'size'
     ];
+    public function item()
+    {
+        return $this->hasOne(Item::class, 'files_id');
+    }
 }

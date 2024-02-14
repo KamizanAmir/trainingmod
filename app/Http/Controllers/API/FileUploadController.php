@@ -38,4 +38,19 @@ class FileUploadController extends Controller
         $file = File::findOrFail($id); // Fetch file by id
         return response()->json($file);
     }
+    // Force download
+    public function downloadFile($id)
+    {
+        $file = File::findOrFail($id);
+        $pathToFile = storage_path('app/' . $file->path);
+        return response()->download($pathToFile, $file->name);
+    }
+
+    // Serve for viewing
+    public function viewFile($id)
+    {
+        $file = File::findOrFail($id);
+        $pathToFile = storage_path('app/' . $file->path);
+        return response()->file($pathToFile);
+    }
 }

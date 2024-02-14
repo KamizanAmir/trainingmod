@@ -13,7 +13,7 @@
                 <a :href="`/items-show/${alert.id}`" class="view-button" style="white-space: nowrap;">View</a>
             </div>
                 </div>
-                <div v-else>No expired items to show.</div>
+                <div style="text-align: center; color: white;" v-else>No expired items to show.</div>
             </section>
             <!-- Notification Alert Section for Expiring Items -->
             <section class="section-container">
@@ -27,12 +27,12 @@
                 <a :href="`/items-show/${alert.id}`" class="view-button" style="white-space: nowrap;">View</a>
             </div>
             </div>
-                <div v-else>Nothing urgent to show.</div>
+                <div style="text-align: center; color: white;" v-else>Nothing urgent to show.</div>
             </section>
             <!-- Section for Non-Expiring Items -->
             <section class="section-container">
             <h1 style="color: white;" class="section-title">Current Records</h1>
-            <div v-if="nonExpiringItems.length" >
+            <div v-if="nonExpiringItems.length">
             <div v-for="alert in nonExpiringItems" :key="alert.name" class="alert-container">
                 <div style="flex-grow: 1; color: white;">
                 <strong> {{ alert.name }} </strong> training for <a :href="`/items-show/${alert.id}`" style="color: rgb(235, 225, 225);">{{ alert.category.name }}</a> is valid until <strong> {{ alert.expired_date | dFormat }} ({{ alert.propertiesCount }} employee)</strong>
@@ -41,7 +41,7 @@
                 <a :href="`/items-show/${alert.id}`" class="view-button" style="padding-left: 20px;">View</a>
             </div>
             </div>
-                <div v-else>No current records to show.</div>
+                <div style="text-align: center; color: white;" v-else>No current records to show.</div>
             </section>
         </article>
     </div>
@@ -132,10 +132,14 @@ export default {
             .sort((a, b) => new Date(a.expired_date) - new Date(b.expired_date));
         },
         nonExpiringItems() {
+            const today = moment();
             return this.alerts
-            .filter(alert => !this.isExpiringSoon(alert.expired_date))
+            .filter(alert => {
+                const expiryDate = moment(alert.expired_date);
+                return expiryDate.isAfter(today) && !this.isExpiringSoon(alert.expired_date);
+            })
             .sort((a, b) => new Date(a.expired_date) - new Date(b.expired_date));
-        }
+        },
     },
     methods: {
         fetchExpiringItems() {

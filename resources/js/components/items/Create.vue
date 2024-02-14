@@ -30,7 +30,7 @@
         </div>
 
         <!-- Training Module -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="category">Training Module :</label>
             <select
                 v-model="form.category_id"
@@ -48,7 +48,7 @@
             <has-error :form="form" field="category_id"></has-error>
         </div>
 
-                <!-- Departments -->
+        <!-- Departments -->
         <div class="col-md-2">
             <label for="departments">Departments :</label>
             <input
