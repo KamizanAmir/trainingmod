@@ -32,6 +32,7 @@
                     <!-- Training Module -->
                     <div class="col-md-2">
                         <label for="category">Training Module :</label>
+                        <span v-if="selectedCategory">{{ selectedCategory.t_type }}</span>
                         <select
                             v-model="form.category_id"
                             name="category"
@@ -140,7 +141,7 @@ export default {
     data() {
         return {
             itemId: 0,
-            categories: {},
+            categories: [],
             form: new Form({
                 name: "",
                 category_id: "",
@@ -151,15 +152,20 @@ export default {
             })
         };
     },
-    watch: {
-    'form.training_date': function(newDate) {
-        if (newDate) {
-            let expiredDate = new Date(newDate);
-            expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
-            this.form.expired_date = expiredDate.toISOString().split('T')[0];
+    computed: {
+        selectedCategory() {
+        return this.categories.find(category => category.id === this.form.category_id);
         }
-    }
-},
+    },
+    watch: {
+        'form.training_date': function(newDate) {
+            if (newDate) {
+                let expiredDate = new Date(newDate);
+                expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
+                this.form.expired_date = expiredDate.toISOString().split('T')[0];
+            }
+        }
+    },
     methods: {
         loadItem() {
             let vm = this;

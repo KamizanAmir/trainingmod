@@ -2472,7 +2472,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      categories: {},
+      categories: [],
       id: 0,
       form: new Form({
         name: "",
@@ -2488,21 +2488,40 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       })
     };
   },
+  computed: {
+    selectedCategory: function selectedCategory() {
+      var _this = this;
+      return this.categories.find(function (category) {
+        return category.id === _this.form.category_id;
+      });
+    }
+  },
   watch: {
-    'form.training_date': function formTraining_date(newDate) {
-      if (newDate) {
+    'form.training_date': function formTraining_date(newDate, oldDate) {
+      if (newDate && this.selectedCategory) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
+        if (this.selectedCategory.t_type !== 'Recert') {
+          expiredDate.setFullYear(expiredDate.getFullYear() + 50); // Set to 50 years for non-Recert
+        } else {
+          expiredDate.setFullYear(expiredDate.getFullYear() + 1); // Set to 1 year for Recert
+        }
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
+    },
+    'form.category_id': function formCategory_id(newVal, oldVal) {
+      var _this2 = this;
+      // Trigger the watcher to update the expired date when category changes
+      this.form.training_date && this.$nextTick(function () {
+        _this2.form.training_date = _this2.form.training_date;
+      });
     }
   },
   methods: {
     loadCategories: function loadCategories() {
-      var _this = this;
+      var _this3 = this;
       axios.get("/api/category/1").then(function (_ref) {
         var data = _ref.data;
-        return _this.categories = data;
+        return _this3.categories = data;
       })["catch"](function (error) {
         console.log(error.response.data.message);
       });
@@ -2521,7 +2540,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       });
     },
     createItem: function createItem() {
-      var _this2 = this;
+      var _this4 = this;
       this.$Progress.start();
 
       // Format the training_date to d-m-Y
@@ -2540,7 +2559,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           type: "success",
           title: "Item created successfully"
         });
-        _this2.$Progress.finish();
+        _this4.$Progress.finish();
       })["catch"](function () {});
     },
     // Helper method to format date from Y-m-d to d-m-Y
@@ -2575,7 +2594,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       itemId: 0,
-      categories: {},
+      categories: [],
       form: new Form({
         name: "",
         category_id: "",
@@ -2589,6 +2608,14 @@ __webpack_require__.r(__webpack_exports__);
         }]
       })
     };
+  },
+  computed: {
+    selectedCategory: function selectedCategory() {
+      var _this = this;
+      return this.categories.find(function (category) {
+        return category.id === _this.form.category_id;
+      });
+    }
   },
   watch: {
     'form.training_date': function formTraining_date(newDate) {
@@ -2617,10 +2644,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     loadCategories: function loadCategories() {
-      var _this = this;
+      var _this2 = this;
       axios.get("/api/category/1").then(function (_ref) {
         var data = _ref.data;
-        return _this.categories = data;
+        return _this2.categories = data;
       })["catch"](function (error) {
         console.log(error.response.data.message);
       });
@@ -2638,17 +2665,17 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editItem: function editItem() {
-      var _this2 = this;
+      var _this3 = this;
       this.$Progress.start();
       this.form.put("/api/items/" + this.id).then(function () {
         Toast.fire({
           type: "success",
           title: "Item updated successfully"
         });
-        _this2.$Progress.finish();
+        _this3.$Progress.finish();
         // Add a delay to allow the toast message to be read by the user before redirecting
         setTimeout(function () {
-          _this2.$router.push("/items");
+          _this3.$router.push("/items");
         }, 1000); // Delay for 2 seconds
       })["catch"](function () {
         Swal("Failed!", "There was something wrong.", "warning");
@@ -2789,6 +2816,51 @@ __webpack_require__.r(__webpack_exports__);
     },
     incrementCounter: function incrementCounter() {
       this.counter += 1;
+    },
+    exportToExcel: function exportToExcel() {
+      var _this2 = this;
+      var data = this.item; // Assuming this.item contains all the data you want to export
+      var csvContent = "data:text/csv;charset=utf-8,";
+
+      // Corrected headers
+      csvContent += "Employee ID,Employee Name,Training Module,Trainer Name, Training Type,Labour Type,Training Date,Expired Date\r\n";
+
+      // Add each row of data
+      JSON.parse(data.properties).forEach(function (property) {
+        // Corrected order of data to match the headers
+        var row = [property.value,
+        // Employee ID
+        property.key,
+        // Employee Name
+        data.category ? data.category.name : 'Deleted',
+        // Training Module
+        data.name,
+        // Trainer Name
+        data.category ? data.category.t_type : 'Deleted',
+        // Training Type
+        data.category ? data.category.l_type : 'Deleted',
+        // Labour Type
+        _this2.formatDate(data.training_date),
+        // Training Date
+        _this2.formatDate(data.expired_date) // Expired Date
+        ].join(',');
+        csvContent += row + "\r\n";
+      });
+
+      // Encode the csvContent
+      var encodedUri = encodeURI(csvContent);
+
+      // Create a link and click on it to start the download
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "export.csv");
+      document.body.appendChild(link); // Required for FF
+
+      link.click(); // This will download the file
+      document.body.removeChild(link); // Clean up
+    },
+    formatDate: function formatDate(dateString) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(dateString)).format('DD/MM/YYYY');
     }
   },
   mounted: function mounted() {
@@ -3557,7 +3629,7 @@ var render = function render() {
     attrs: {
       "for": "category"
     }
-  }, [_vm._v("Training Module :")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Training Module :")]), _vm._v(" "), _vm.selectedCategory ? _c("span", [_vm._v(_vm._s(_vm.selectedCategory.t_type))]) : _vm._e(), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3906,7 +3978,7 @@ var render = function render() {
     attrs: {
       "for": "category"
     }
-  }, [_vm._v("Training Module :")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Training Module :")]), _vm._v(" "), _vm.selectedCategory ? _c("span", [_vm._v(_vm._s(_vm.selectedCategory.t_type))]) : _vm._e(), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -4297,7 +4369,12 @@ var render = function render() {
     staticClass: "card text-center"
   }, [_c("div", {
     staticClass: "card-header text-bold"
-  }, [_c("h3", [_vm._v(_vm._s(_vm.item.name))])]), _vm._v(" "), _c("div", {
+  }, [_c("h3", {
+    staticClass: "text-bold",
+    staticStyle: {
+      color: "orange"
+    }
+  }, [_vm._v(_vm._s(_vm.item.name))])]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("h5", {
     staticClass: "card-title"
@@ -4305,11 +4382,19 @@ var render = function render() {
     staticClass: "text-bold"
   }, [_vm._v("Training Module :")]), _vm._v(" "), _vm.item.category ? _c("span", {
     staticStyle: {
-      color: "red"
+      color: "blue"
     }
   }, [_vm._v(_vm._s(_vm.item.category.name))]) : _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("May be deleted")])]), _vm._v(" "), _c("hr", {
+  }, [_vm._v("May be deleted")]), _vm._v(" ||\n                            "), _vm.item.category ? _c("span", {
+    staticClass: "text-bold"
+  }, [_vm._v("Training Type : ")]) : _vm._e(), _c("a", {
+    staticStyle: {
+      color: "blueviolet"
+    }
+  }, [_vm._v(_vm._s(_vm.item.category.t_type))]), _vm._v(" ||\n                            "), _vm.item.category ? _c("span", {
+    staticClass: "text-bold"
+  }, [_vm._v("Labor Type :")]) : _vm._e(), _vm._v(" " + _vm._s(_vm.item.category.l_type) + "\n                    ")]), _vm._v(" "), _c("hr", {
     staticStyle: {
       "margin-top": "25px"
     }
@@ -4324,7 +4409,7 @@ var render = function render() {
       staticClass: "text-bold"
     }, [_vm._v("Department:")]), _vm._v(" " + _vm._s(_vm.item.departments) + " ||\n                            "), _c("span", {
       staticClass: "text-bold"
-    }, [_vm._v("Employee ID :")]), _vm._v(_vm._s(property.value) + " \n                        ")]);
+    }, [_vm._v("Employee ID :")]), _vm._v(_vm._s(property.value) + "\n                        ")]);
   }), 0), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "dates-info"
   }, [_c("p", {
@@ -4345,7 +4430,12 @@ var render = function render() {
     attrs: {
       to: "/intro"
     }
-  }, [_vm._v("Home")]), _vm._v(" "), _c("router-link", {
+  }, [_vm._v("Home")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-success",
+    on: {
+      click: _vm.exportToExcel
+    }
+  }, [_vm._v("Export to Excel")]), _vm._v(" "), _c("router-link", {
     staticClass: "btn btn-primary",
     attrs: {
       to: "/items-edit/" + _vm.item.id

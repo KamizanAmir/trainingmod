@@ -8,6 +8,7 @@ use App\Item;
 use function GuzzleHttp\json_encode;
 use App\Http\Requests\ItemCreateRequest;
 use Carbon\Carbon;
+use App\Category;
 
 class ItemController extends Controller
 {
@@ -53,25 +54,25 @@ class ItemController extends Controller
      */
     public function store(ItemCreateRequest $request)
     {
-        // Decode the rows and merge them into the request attributes
         $request->merge(['properties' => json_encode($request->rows)]);
-
-        // Calculate the expired date based on the training date
-        $trainingDate = $request->input('training_date');
-        // $departments = $request->input('departments');
-        $expiredDate = \Carbon\Carbon::createFromFormat('Y-m-d', $trainingDate)
-                                    ->addDays(365)
-                                    ->format('Y-m-d');
-
-        // Create the item with the request data and calculated expired date
+    
+        $category = Category::find($request->input('category_id'));
+        $trainingDate = Carbon::createFromFormat('Y-m-d', $request->input('training_date'));
+    
+        // Default to 25 years ahead for categories not matching Recert
+        $expiredDate = $trainingDate->copy()->addYears(50);
+    
+        if ($category && $category->t_type === 'Recert') {
+            $expiredDate = $trainingDate->copy()->addYear(); // 1 year ahead for Recert
+        }
+    
         $item = $this->repository->create(array_merge($request->all(), [
-            'expired_date' => $expiredDate,
-            'departments' => $request->departments,
+            'expired_date' => $expiredDate->format('Y-m-d'),
         ]));
-
-        // Return the created item or a response
+    
         return response()->json(['item' => $item], 201);
     }
+    
 
 
     /**
@@ -105,27 +106,28 @@ class ItemController extends Controller
      */
     public function update(ItemCreateRequest $request, $id)
     {
-        // Decode the rows and merge them into the request attributes
         $request->merge(['properties' => json_encode($request->rows)]);
-    
-        // Find the item
         $item = $this->repository->findOrFail($id);
     
-        // Calculate the expired date based on the training date, if it's changed
-        if ($request->has('training_date')) {
-            $trainingDate = $request->input('training_date');
-            $expiredDate = \Carbon\Carbon::createFromFormat('Y-m-d', $trainingDate)
-                                           ->addDays(60)
-                                           ->format('Y-m-d');
-            $request->merge(['expired_date' => $expiredDate]);
+        if ($request->has('training_date') && $request->has('category_id')) {
+            $category = Category::find($request->input('category_id'));
+            $trainingDate = Carbon::createFromFormat('Y-m-d', $request->input('training_date'));
+    
+            // Default to 25 years ahead for categories not matching Recert
+            $expiredDate = $trainingDate->copy()->addYears(50);
+    
+            if ($category && $category->t_type === 'Recert') {
+                $expiredDate = $trainingDate->copy()->addYear(); // Adjust for Recert
+            }
+    
+            $request->merge(['expired_date' => $expiredDate->format('Y-m-d')]);
         }
     
-        // Update the item with the request data
         $item->update($request->all());
     
-        // Return the updated item or a response
         return response()->json(['item' => $item], 200);
     }
+    
     
 
     /**
