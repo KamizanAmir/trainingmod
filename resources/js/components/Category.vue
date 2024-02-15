@@ -79,6 +79,7 @@
                     </div>
                     <form @submit.prevent=" editMode ? updateCategory() : createCategory()">
                         <div class="modal-body">
+                        <label for="name">Module</label>
                             <div class="form-group">
                                 <input
                                     v-model="form.name"
@@ -90,6 +91,7 @@
                                 >
                                 <has-error :form="form" field="name"></has-error>
                             </div>
+                            <label for="t_name">Preparation</label>
                             <div class="form-group"> <!--This one Added for input field Kamizan-->
                                 <input
                                     v-model="form.t_name"
@@ -100,6 +102,26 @@
                                     :class="{ 'is-invalid': form.errors.has('t_name') }"
                                 >
                                 <has-error :form="form" field="t_name"></has-error>
+                            </div>
+                            <div class="form-group">
+                                <label for="t_type">Training Type</label>
+                                <select v-model="form.t_type" name="t_type" class="form-control" :class="{ 'is-invalid': form.errors.has('t_type') }">
+                                    <option disabled value="">Please select one</option>
+                                    <option value="Recert">Recert</option>
+                                    <option value="Training">Training</option>
+                                    <option value="Briefing">Briefing</option>
+                                </select>
+                                <has-error :form="form" field="t_type"></has-error>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="l_type">Labor Type</label>
+                                <select v-model="form.l_type" name="l_type" class="form-control" :class="{ 'is-invalid': form.errors.has('l_type') }">
+                                    <option disabled value="">Please select one</option>
+                                    <option value="DL">DL</option>
+                                    <option value="IDL">IDL</option>
+                                </select>
+                                <has-error :form="form" field="l_type"></has-error>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -126,6 +148,8 @@ export default {
                 id: "",
                 name: "",
                 t_name: "",
+                t_type: "",
+                l_type: "",
             })
         };
     },

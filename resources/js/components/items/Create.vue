@@ -155,7 +155,7 @@ export default {
     'form.training_date': function(newDate) {
         if (newDate) {
             let expiredDate = new Date(newDate);
-            expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
+            expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
             this.form.expired_date = expiredDate.toISOString().split('T')[0];
         }
     }

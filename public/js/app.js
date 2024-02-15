@@ -2216,7 +2216,9 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         id: "",
         name: "",
-        t_name: ""
+        t_name: "",
+        t_type: "",
+        l_type: ""
       })
     };
   },
@@ -2490,7 +2492,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     'form.training_date': function formTraining_date(newDate) {
       if (newDate) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
+        expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
     }
@@ -2592,7 +2594,7 @@ __webpack_require__.r(__webpack_exports__);
     'form.training_date': function formTraining_date(newDate) {
       if (newDate) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
+        expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
     }
@@ -2931,7 +2933,11 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "modal-body"
-  }, [_c("div", {
+  }, [_c("label", {
+    attrs: {
+      "for": "name"
+    }
+  }, [_vm._v("Module")]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("input", {
     directives: [{
@@ -2963,7 +2969,11 @@ var render = function render() {
       form: _vm.form,
       field: "name"
     }
-  })], 1), _vm._v(" "), _c("div", {
+  })], 1), _vm._v(" "), _c("label", {
+    attrs: {
+      "for": "t_name"
+    }
+  }, [_vm._v("Preparation")]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("input", {
     directives: [{
@@ -2994,6 +3004,108 @@ var render = function render() {
     attrs: {
       form: _vm.form,
       field: "t_name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "t_type"
+    }
+  }, [_vm._v("Training Type")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.t_type,
+      expression: "form.t_type"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("t_type")
+    },
+    attrs: {
+      name: "t_type"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.form, "t_type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      disabled: "",
+      value: ""
+    }
+  }, [_vm._v("Please select one")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Recert"
+    }
+  }, [_vm._v("Recert")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Training"
+    }
+  }, [_vm._v("Training")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Briefing"
+    }
+  }, [_vm._v("Briefing")])]), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "t_type"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "l_type"
+    }
+  }, [_vm._v("Labor Type")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.l_type,
+      expression: "form.l_type"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("l_type")
+    },
+    attrs: {
+      name: "l_type"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.form, "l_type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      disabled: "",
+      value: ""
+    }
+  }, [_vm._v("Please select one")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "DL"
+    }
+  }, [_vm._v("DL")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "IDL"
+    }
+  }, [_vm._v("IDL")])]), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "l_type"
     }
   })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"

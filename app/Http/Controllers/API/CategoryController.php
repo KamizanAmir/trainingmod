@@ -47,12 +47,16 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required',
             't_name' => 'required',
+            't_type' => 'required',
+            'l_type' => 'required',
             // other validation rules...
         ]);
     
         $category = new Category();
         $category->name = $request->name;
         $category->t_name = $request->t_name; // Save t_name
+        $category -> t_type = $request -> t_type;
+        $category -> l_type = $request -> l_type;
         // other fields...
         $category->save();
     
@@ -90,12 +94,16 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required',
             't_name' => 'required', // Add validation for the trainer name //this under update $id
+            't_type' => 'required',
+            'l_type' => 'required',
             // other validation rules...
         ]);
 
         $category = Category::find($id);
         $category->name = $request->name;
         $category->t_name = $request->t_name; // Save the trainer name
+        $category -> t_type = $request -> t_type;
+        $category -> l_type = $request -> l_type;
         // other fields...
         $category->save();
 

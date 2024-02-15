@@ -60,7 +60,7 @@ class ItemController extends Controller
         $trainingDate = $request->input('training_date');
         // $departments = $request->input('departments');
         $expiredDate = \Carbon\Carbon::createFromFormat('Y-m-d', $trainingDate)
-                                    ->addDays(60)
+                                    ->addDays(365)
                                     ->format('Y-m-d');
 
         // Create the item with the request data and calculated expired date
