@@ -9,7 +9,12 @@ class Category extends Model
 {
     // use HasApiTokens;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        't_name',
+        't_type',
+        'l_type',
+    ];
     protected $table = 'categories';
     public function item()
     {

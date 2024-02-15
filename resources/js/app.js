@@ -2,7 +2,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-// imported packages
+// Imported packages
 
 import moment from 'moment';
 import VueProgressBar from 'vue-progressbar'
@@ -14,7 +14,7 @@ import {
     AlertError
 } from 'vform';
 
-//gobal declaration for vue form
+// Global declaration for vue form
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
@@ -33,6 +33,11 @@ let routes = [{
         path: '/items',
         component: require('./components/items/Index.vue').default
     },
+    // {
+    //     path: '/upload',
+    //     component: require('./components/FileUpload.vue').default,
+    //     name: 'upload'
+    // },
     {
         path: '/items-create',
         component: require('./components/items/Create.vue').default

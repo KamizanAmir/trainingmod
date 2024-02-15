@@ -5,7 +5,6 @@
         <img src="{{url('./img/logo.png')}}" alt=" Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Training Module</span>
     </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
@@ -17,7 +16,6 @@
                 <a href="#" class="d-block">{{auth()->user()->name}}</a>
             </div>
         </div>
-
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -33,16 +31,22 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <router-link to="/category" class="nav-link">
-                                <i class="fa fa-list nav-icon blue"></i>
+                                <i class="fa fa-tags nav-icon blue"></i>
                                 <p>Add Training Module</p>
                             </router-link>
                         </li>
                         <li class="nav-item">
                             <router-link to="/items" class="nav-link">
-                                <i class="fa fa-check-square nav-icon yellow"></i>
+                                <i class="fa fa-address-card nav-icon yellow"></i>
                                 <p>Employee Records</p>
                             </router-link>
                         </li>
+                        <!-- <li class="nav-item">
+                            <router-link to="/upload" class="nav-link">
+                                <i class="fa fa-file nav-icon white"></i>
+                                <p>File Upload</p>
+                            </router-link>
+                        </li> -->
                     </ul>
                 </li>
                 <li class="nav-item">

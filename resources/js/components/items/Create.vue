@@ -30,8 +30,9 @@
         </div>
 
         <!-- Training Module -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="category">Training Module :</label>
+            <span v-if="selectedCategory">{{ selectedCategory.t_type }}</span>
             <select
                 v-model="form.category_id"
                 name="category"
@@ -48,7 +49,7 @@
             <has-error :form="form" field="category_id"></has-error>
         </div>
 
-                <!-- Departments -->
+        <!-- Departments -->
         <div class="col-md-2">
             <label for="departments">Departments :</label>
             <input
@@ -139,7 +140,7 @@
 export default {
     data() {
         return {
-            categories: {},
+            categories: [],
             id: 0,
             form: new Form({
                 name: "",
@@ -151,15 +152,30 @@ export default {
             })
         };
     },
+    computed: {
+        selectedCategory() {
+        return this.categories.find(category => category.id === this.form.category_id);
+        }
+    },
     watch: {
-    'form.training_date': function(newDate) {
-        if (newDate) {
+        'form.training_date': function(newDate, oldDate) {
+        if (newDate && this.selectedCategory) {
             let expiredDate = new Date(newDate);
-            expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
+            if (this.selectedCategory.t_type !== 'Recert') {
+            expiredDate.setFullYear(expiredDate.getFullYear() + 50); // Set to 50 years for non-Recert
+            } else {
+            expiredDate.setFullYear(expiredDate.getFullYear() + 1); // Set to 1 year for Recert
+            }
             this.form.expired_date = expiredDate.toISOString().split('T')[0];
         }
-    }
-},
+        },
+        'form.category_id': function(newVal, oldVal) {
+        // Trigger the watcher to update the expired date when category changes
+        this.form.training_date && this.$nextTick(() => {
+            this.form.training_date = this.form.training_date;
+        });
+        }
+    },
     methods: {
         loadCategories() {
             axios

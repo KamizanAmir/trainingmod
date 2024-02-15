@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         return CategoryResource::collection($this->repository->all());
         $categories = Category::query()
-        ->select('id', 'name', 'count', 'created_at', 'updated_at', 't_name') // add 't_name' here
+        ->select('id', 'name', 'count', 'created_at', 'updated_at', 't_name')
         ->get();
 
     return response()->json($categories);
@@ -46,13 +46,17 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            't_name' => 'required', // Validate t_name
+            't_name' => 'required',
+            't_type' => 'required',
+            'l_type' => 'required',
             // other validation rules...
         ]);
     
         $category = new Category();
         $category->name = $request->name;
         $category->t_name = $request->t_name; // Save t_name
+        $category -> t_type = $request -> t_type;
+        $category -> l_type = $request -> l_type;
         // other fields...
         $category->save();
     
@@ -90,12 +94,16 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required',
             't_name' => 'required', // Add validation for the trainer name //this under update $id
+            't_type' => 'required',
+            'l_type' => 'required',
             // other validation rules...
         ]);
 
         $category = Category::find($id);
         $category->name = $request->name;
         $category->t_name = $request->t_name; // Save the trainer name
+        $category -> t_type = $request -> t_type;
+        $category -> l_type = $request -> l_type;
         // other fields...
         $category->save();
 

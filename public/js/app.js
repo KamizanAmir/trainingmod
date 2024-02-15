@@ -2216,7 +2216,9 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         id: "",
         name: "",
-        t_name: ""
+        t_name: "",
+        t_type: "",
+        l_type: ""
       })
     };
   },
@@ -2373,8 +2375,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     nonExpiringItems: function nonExpiringItems() {
       var _this2 = this;
+      var today = moment__WEBPACK_IMPORTED_MODULE_1___default()();
       return this.alerts.filter(function (alert) {
-        return !_this2.isExpiringSoon(alert.expired_date);
+        var expiryDate = moment__WEBPACK_IMPORTED_MODULE_1___default()(alert.expired_date);
+        return expiryDate.isAfter(today) && !_this2.isExpiringSoon(alert.expired_date);
       }).sort(function (a, b) {
         return new Date(a.expired_date) - new Date(b.expired_date);
       });
@@ -2468,7 +2472,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      categories: {},
+      categories: [],
       id: 0,
       form: new Form({
         name: "",
@@ -2484,21 +2488,40 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       })
     };
   },
+  computed: {
+    selectedCategory: function selectedCategory() {
+      var _this = this;
+      return this.categories.find(function (category) {
+        return category.id === _this.form.category_id;
+      });
+    }
+  },
   watch: {
-    'form.training_date': function formTraining_date(newDate) {
-      if (newDate) {
+    'form.training_date': function formTraining_date(newDate, oldDate) {
+      if (newDate && this.selectedCategory) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
+        if (this.selectedCategory.t_type !== 'Recert') {
+          expiredDate.setFullYear(expiredDate.getFullYear() + 50); // Set to 50 years for non-Recert
+        } else {
+          expiredDate.setFullYear(expiredDate.getFullYear() + 1); // Set to 1 year for Recert
+        }
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
+    },
+    'form.category_id': function formCategory_id(newVal, oldVal) {
+      var _this2 = this;
+      // Trigger the watcher to update the expired date when category changes
+      this.form.training_date && this.$nextTick(function () {
+        _this2.form.training_date = _this2.form.training_date;
+      });
     }
   },
   methods: {
     loadCategories: function loadCategories() {
-      var _this = this;
+      var _this3 = this;
       axios.get("/api/category/1").then(function (_ref) {
         var data = _ref.data;
-        return _this.categories = data;
+        return _this3.categories = data;
       })["catch"](function (error) {
         console.log(error.response.data.message);
       });
@@ -2517,7 +2540,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       });
     },
     createItem: function createItem() {
-      var _this2 = this;
+      var _this4 = this;
       this.$Progress.start();
 
       // Format the training_date to d-m-Y
@@ -2536,7 +2559,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           type: "success",
           title: "Item created successfully"
         });
-        _this2.$Progress.finish();
+        _this4.$Progress.finish();
       })["catch"](function () {});
     },
     // Helper method to format date from Y-m-d to d-m-Y
@@ -2571,7 +2594,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       itemId: 0,
-      categories: {},
+      categories: [],
       form: new Form({
         name: "",
         category_id: "",
@@ -2586,11 +2609,19 @@ __webpack_require__.r(__webpack_exports__);
       })
     };
   },
+  computed: {
+    selectedCategory: function selectedCategory() {
+      var _this = this;
+      return this.categories.find(function (category) {
+        return category.id === _this.form.category_id;
+      });
+    }
+  },
   watch: {
     'form.training_date': function formTraining_date(newDate) {
       if (newDate) {
         var expiredDate = new Date(newDate);
-        expiredDate.setDate(expiredDate.getDate() + 60); // Change date to user request
+        expiredDate.setDate(expiredDate.getDate() + 365); // Change date to user request
         this.form.expired_date = expiredDate.toISOString().split('T')[0];
       }
     }
@@ -2613,10 +2644,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     loadCategories: function loadCategories() {
-      var _this = this;
+      var _this2 = this;
       axios.get("/api/category/1").then(function (_ref) {
         var data = _ref.data;
-        return _this.categories = data;
+        return _this2.categories = data;
       })["catch"](function (error) {
         console.log(error.response.data.message);
       });
@@ -2634,17 +2665,17 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editItem: function editItem() {
-      var _this2 = this;
+      var _this3 = this;
       this.$Progress.start();
       this.form.put("/api/items/" + this.id).then(function () {
         Toast.fire({
           type: "success",
           title: "Item updated successfully"
         });
-        _this2.$Progress.finish();
+        _this3.$Progress.finish();
         // Add a delay to allow the toast message to be read by the user before redirecting
         setTimeout(function () {
-          _this2.$router.push("/items");
+          _this3.$router.push("/items");
         }, 1000); // Delay for 2 seconds
       })["catch"](function () {
         Swal("Failed!", "There was something wrong.", "warning");
@@ -2785,6 +2816,51 @@ __webpack_require__.r(__webpack_exports__);
     },
     incrementCounter: function incrementCounter() {
       this.counter += 1;
+    },
+    exportToExcel: function exportToExcel() {
+      var _this2 = this;
+      var data = this.item; // Assuming this.item contains all the data you want to export
+      var csvContent = "data:text/csv;charset=utf-8,";
+
+      // Corrected headers
+      csvContent += "Employee ID,Employee Name,Training Module,Trainer Name, Training Type,Labour Type,Training Date,Expired Date\r\n";
+
+      // Add each row of data
+      JSON.parse(data.properties).forEach(function (property) {
+        // Corrected order of data to match the headers
+        var row = [property.value,
+        // Employee ID
+        property.key,
+        // Employee Name
+        data.category ? data.category.name : 'Deleted',
+        // Training Module
+        data.name,
+        // Trainer Name
+        data.category ? data.category.t_type : 'Deleted',
+        // Training Type
+        data.category ? data.category.l_type : 'Deleted',
+        // Labour Type
+        _this2.formatDate(data.training_date),
+        // Training Date
+        _this2.formatDate(data.expired_date) // Expired Date
+        ].join(',');
+        csvContent += row + "\r\n";
+      });
+
+      // Encode the csvContent
+      var encodedUri = encodeURI(csvContent);
+
+      // Create a link and click on it to start the download
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "export.csv");
+      document.body.appendChild(link); // Required for FF
+
+      link.click(); // This will download the file
+      document.body.removeChild(link); // Clean up
+    },
+    formatDate: function formatDate(dateString) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(dateString)).format('DD/MM/YYYY');
     }
   },
   mounted: function mounted() {
@@ -2929,7 +3005,11 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "modal-body"
-  }, [_c("div", {
+  }, [_c("label", {
+    attrs: {
+      "for": "name"
+    }
+  }, [_vm._v("Module")]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("input", {
     directives: [{
@@ -2961,7 +3041,11 @@ var render = function render() {
       form: _vm.form,
       field: "name"
     }
-  })], 1), _vm._v(" "), _c("div", {
+  })], 1), _vm._v(" "), _c("label", {
+    attrs: {
+      "for": "t_name"
+    }
+  }, [_vm._v("Preparation")]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("input", {
     directives: [{
@@ -2992,6 +3076,108 @@ var render = function render() {
     attrs: {
       form: _vm.form,
       field: "t_name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "t_type"
+    }
+  }, [_vm._v("Training Type")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.t_type,
+      expression: "form.t_type"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("t_type")
+    },
+    attrs: {
+      name: "t_type"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.form, "t_type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      disabled: "",
+      value: ""
+    }
+  }, [_vm._v("Please select one")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Recert"
+    }
+  }, [_vm._v("Recert")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Training"
+    }
+  }, [_vm._v("Training")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Briefing"
+    }
+  }, [_vm._v("Briefing")])]), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "t_type"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "l_type"
+    }
+  }, [_vm._v("Labor Type")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.l_type,
+      expression: "form.l_type"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("l_type")
+    },
+    attrs: {
+      name: "l_type"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.form, "l_type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      disabled: "",
+      value: ""
+    }
+  }, [_vm._v("Please select one")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "DL"
+    }
+  }, [_vm._v("DL")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "IDL"
+    }
+  }, [_vm._v("IDL")])]), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "l_type"
     }
   })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
@@ -3032,7 +3218,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("th", [_vm._v("Training name")]), _vm._v(" "), _c("th", [_vm._v("Prepared By")]), _vm._v(" "), _c("th", [_vm._v("Total of Training")]), _vm._v(" "), _c("th", [_vm._v("Created at")]), _vm._v(" "), _c("th", [_vm._v("Updated at")]), _vm._v(" "), _c("th", {
+  return _c("tr", [_c("th", [_vm._v("Training name")]), _vm._v(" "), _c("th", [_vm._v("Prepared By")]), _vm._v(" "), _c("th", [_vm._v("No of employees")]), _vm._v(" "), _c("th", [_vm._v("Created at")]), _vm._v(" "), _c("th", [_vm._v("Updated at")]), _vm._v(" "), _c("th", {
     staticClass: "text-right"
   }, [_vm._v("Action")])]);
 }, function () {
@@ -3156,7 +3342,7 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "Box-body readme blob instapaper_body js-code-block-container",
+    staticClass: "box-body readme blob instapaper_body js-code-block-container",
     attrs: {
       id: "readme"
     }
@@ -3165,20 +3351,27 @@ var render = function render() {
     attrs: {
       itemprop: "text"
     }
-  }, [_vm.expiredItems.length ? _c("div", [_c("h1", {
+  }, [_c("section", {
+    staticClass: "section-container"
+  }, [_c("h1", {
+    staticClass: "section-title",
     staticStyle: {
-      "align-items": "center",
-      "text-align": "center"
+      color: "white"
     }
-  }, [_vm._v("Expired Items")]), _vm._v(" "), _vm._l(_vm.expiredItems, function (alert) {
+  }, [_vm._v("Expired Items")]), _vm._v(" "), _vm.expiredItems.length ? _c("div", _vm._l(_vm.expiredItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
     }, [_c("div", {
       staticStyle: {
-        "flex-grow": "1"
+        "flex-grow": "1",
+        color: "white"
       }
-    }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
+    }, [_c("strong", {
+      staticStyle: {
+        color: "white"
+      }
+    }, [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
         color: "red"
       },
@@ -3189,7 +3382,7 @@ var render = function render() {
       staticStyle: {
         color: "red"
       }
-    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee) ")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee) ")])]), _vm._v(" "), _c("a", {
       staticClass: "view-button",
       staticStyle: {
         "white-space": "nowrap"
@@ -3198,17 +3391,26 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  })], 2) : _c("div", [_vm._v("\n            No expired items to show.\n        ")]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("h1", {
+  }), 0) : _c("div", {
     staticStyle: {
-      "text-align": "center"
+      "text-align": "center",
+      color: "white"
     }
-  }, [_vm._v("Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", [_vm._l(_vm.expiringSoonItems, function (alert) {
+  }, [_vm._v("No expired items to show.")])]), _vm._v(" "), _c("section", {
+    staticClass: "section-container"
+  }, [_c("h1", {
+    staticClass: "section-title",
+    staticStyle: {
+      color: "white"
+    }
+  }, [_vm._v("Alert")]), _vm._v(" "), _vm.expiringSoonItems.length ? _c("div", _vm._l(_vm.expiringSoonItems, function (alert) {
     return _c("div", {
       key: alert.name,
       staticClass: "alert-container"
     }, [_c("div", {
       staticStyle: {
-        "flex-grow": "1"
+        "flex-grow": "1",
+        color: "white"
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
@@ -3221,7 +3423,7 @@ var render = function render() {
       staticStyle: {
         color: "orange"
       }
-    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+    }, [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")])]), _vm._v(" "), _c("a", {
       staticClass: "view-button",
       staticStyle: {
         "white-space": "nowrap"
@@ -3230,9 +3432,17 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  }), _vm._v(" "), _c("hr")], 2) : _c("div", [_vm._v("\n            Nothing urgent to show.\n        ")]), _vm._v(" "), _c("h1", {
+  }), 0) : _c("div", {
     staticStyle: {
-      "text-align": "center"
+      "text-align": "center",
+      color: "white"
+    }
+  }, [_vm._v("Nothing urgent to show.")])]), _vm._v(" "), _c("section", {
+    staticClass: "section-container"
+  }, [_c("h1", {
+    staticClass: "section-title",
+    staticStyle: {
+      color: "white"
     }
   }, [_vm._v("Current Records")]), _vm._v(" "), _vm.nonExpiringItems.length ? _c("div", _vm._l(_vm.nonExpiringItems, function (alert) {
     return _c("div", {
@@ -3240,16 +3450,17 @@ var render = function render() {
       staticClass: "alert-container"
     }, [_c("div", {
       staticStyle: {
-        "flex-grow": "1"
+        "flex-grow": "1",
+        color: "white"
       }
     }, [_c("strong", [_vm._v(" " + _vm._s(alert.name) + " ")]), _vm._v(" training for "), _c("a", {
       staticStyle: {
-        color: "black"
+        color: "rgb(235, 225, 225)"
       },
       attrs: {
         href: "/items-show/".concat(alert.id)
       }
-    }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is valid until "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("a", {
+    }, [_vm._v(_vm._s(alert.category.name))]), _vm._v(" is valid until "), _c("strong", [_vm._v(" " + _vm._s(_vm._f("dFormat")(alert.expired_date)) + " (" + _vm._s(alert.propertiesCount) + " employee)")])]), _vm._v(" "), _c("a", {
       staticClass: "view-button",
       staticStyle: {
         "padding-left": "20px"
@@ -3258,7 +3469,12 @@ var render = function render() {
         href: "/items-show/".concat(alert.id)
       }
     }, [_vm._v("View")])]);
-  }), 0) : _c("div", [_vm._v("\n            No current records to show.\n        ")])])]);
+  }), 0) : _c("div", {
+    staticStyle: {
+      "text-align": "center",
+      color: "white"
+    }
+  }, [_vm._v("No current records to show.")])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -3301,7 +3517,17 @@ var render = function render() {
         to: "/items-show/" + item.id
       }
     }, [_vm._v(_vm._s(item.name))])], 1)]);
-  })], 2), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("div", {
+    staticClass: "button-group",
+    staticStyle: {
+      "margin-top": "1rem"
+    }
+  }, [_c("router-link", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      to: "/category"
+    }
+  }, [_vm._v("Back")])], 1)], 2), _vm._v(" "), _c("div", {
     staticClass: "card-footer text-muted"
   }, [_vm._v(_vm._s(_vm._f("dFormat")(_vm.category.created_at)))])])])])]);
 };
@@ -3312,7 +3538,7 @@ var staticRenderFns = [function () {
     staticClass: "card-title"
   }, [_c("span", {
     staticClass: "text-bold"
-  }, [_vm._v("Items related to this category :")])]);
+  }, [_vm._v("Current trainer for this module :")])]);
 }];
 render._withStripped = true;
 
@@ -3398,12 +3624,12 @@ var render = function render() {
       field: "name"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": "category"
     }
-  }, [_vm._v("Training Module :")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Training Module :")]), _vm._v(" "), _vm.selectedCategory ? _c("span", [_vm._v(_vm._s(_vm.selectedCategory.t_type))]) : _vm._e(), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3752,7 +3978,7 @@ var render = function render() {
     attrs: {
       "for": "category"
     }
-  }, [_vm._v("Training Module :")]), _vm._v(" "), _c("select", {
+  }, [_vm._v("Training Module :")]), _vm._v(" "), _vm.selectedCategory ? _c("span", [_vm._v(_vm._s(_vm.selectedCategory.t_type))]) : _vm._e(), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -4053,7 +4279,7 @@ var render = function render() {
     staticStyle: {
       "text-align": "left"
     }
-  }, [_vm._v("Total no. of training : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total number of training : " + _vm._s(_vm.resultCount))])])]), _vm._v(" "), _c("div", {
     staticClass: "card-tools mt-2"
   }, [_c("router-link", {
     staticClass: "btn btn-success",
@@ -4106,7 +4332,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("h1", [_c("strong", [_vm._v("Employee List")])]);
+  return _c("h1", [_c("strong", [_vm._v("Employee Training Record")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -4143,7 +4369,12 @@ var render = function render() {
     staticClass: "card text-center"
   }, [_c("div", {
     staticClass: "card-header text-bold"
-  }, [_c("h3", [_vm._v(_vm._s(_vm.item.name))])]), _vm._v(" "), _c("div", {
+  }, [_c("h3", {
+    staticClass: "text-bold",
+    staticStyle: {
+      color: "orange"
+    }
+  }, [_vm._v(_vm._s(_vm.item.name))])]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("h5", {
     staticClass: "card-title"
@@ -4151,11 +4382,19 @@ var render = function render() {
     staticClass: "text-bold"
   }, [_vm._v("Training Module :")]), _vm._v(" "), _vm.item.category ? _c("span", {
     staticStyle: {
-      color: "red"
+      color: "blue"
     }
   }, [_vm._v(_vm._s(_vm.item.category.name))]) : _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("May be deleted")])]), _vm._v(" "), _c("hr", {
+  }, [_vm._v("May be deleted")]), _vm._v(" ||\n                            "), _vm.item.category ? _c("span", {
+    staticClass: "text-bold"
+  }, [_vm._v("Training Type : ")]) : _vm._e(), _c("a", {
+    staticStyle: {
+      color: "blueviolet"
+    }
+  }, [_vm._v(_vm._s(_vm.item.category.t_type))]), _vm._v(" ||\n                            "), _vm.item.category ? _c("span", {
+    staticClass: "text-bold"
+  }, [_vm._v("Labor Type :")]) : _vm._e(), _vm._v(" " + _vm._s(_vm.item.category.l_type) + "\n                    ")]), _vm._v(" "), _c("hr", {
     staticStyle: {
       "margin-top": "25px"
     }
@@ -4170,7 +4409,7 @@ var render = function render() {
       staticClass: "text-bold"
     }, [_vm._v("Department:")]), _vm._v(" " + _vm._s(_vm.item.departments) + " ||\n                            "), _c("span", {
       staticClass: "text-bold"
-    }, [_vm._v("Employee ID :")]), _vm._v(_vm._s(property.value) + " \n                        ")]);
+    }, [_vm._v("Employee ID :")]), _vm._v(_vm._s(property.value) + "\n                        ")]);
   }), 0), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "dates-info"
   }, [_c("p", {
@@ -4191,7 +4430,12 @@ var render = function render() {
     attrs: {
       to: "/intro"
     }
-  }, [_vm._v("Home")]), _vm._v(" "), _c("router-link", {
+  }, [_vm._v("Home")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-success",
+    on: {
+      click: _vm.exportToExcel
+    }
+  }, [_vm._v("Export to Excel")]), _vm._v(" "), _c("router-link", {
     staticClass: "btn btn-primary",
     attrs: {
       to: "/items-edit/" + _vm.item.id
@@ -8584,7 +8828,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.alert-container[data-v-0648c911] {\n  display: flex;\n  justify-content: center; /* Changed to center */\n  align-items: center;\n  margin-bottom: 10px; /* or any spacing you want between items */\n  text-align: center; /* Center align the text */\n}\n.view-button[data-v-0648c911] {\n  background-color: blue; /* Blue background */\n  color: white; /* White text */\n  padding: 10px 20px; /* Padding inside the button */\n  text-align: center; /* Center text inside the button */\n  text-decoration: none; /* Remove underline from text */\n  display: inline-block; /* Allow width and height to be set */\n  font-size: 16px; /* Set font size */\n  margin: 4px 2px; /* Spacing around the button */\n  cursor: pointer; /* Change mouse cursor to pointer on hover */\n  border: none; /* Remove border */\n  border-radius: 5px; /* Rounded corners */\n}\n", ""]);
+exports.push([module.i, "\n.section-container[data-v-0648c911] {\n  margin-bottom: 20px; /* Spacing between sections */\n  border: 1px solid #0d3f80; /* Light grey border */\n  border-radius: 6px; /* Rounded corners */\n  background-color: #343a40; /* Light grey background */\n  padding: 20px; /* Padding around the content */\n}\n.section-title[data-v-0648c911] {\n  text-align: center;\n  margin-bottom: 15px; /* Spacing after the title */\n}\n.table-container[data-v-0648c911] {\n  background-color: white; /* White background for the content area */\n  border: 1px solid #ccc; /* Light border for the table/container */\n  border-radius: 4px; /* Slight rounding of corners */\n  overflow: hidden; /* Ensures no overflow of child elements */\n}\n.alert-container[data-v-0648c911] {\n    display: flex;\n    justify-content: center; /* Changed to center */\n    align-items: center;\n    margin-bottom: 10px; /* or any spacing you want between items */\n    text-align: center; /* Center align the text */\n}\n\n/* Ensure the last alert-container in each table-container does not have a bottom border */\n.table-container .alert-container[data-v-0648c911]:last-child {\n  border-bottom: none;\n}\n.view-button[data-v-0648c911] {\n    background-color: rgb(235, 199, 19); /* Blue background */\n    color: black; /* White text */\n    padding: 10px 20px; /* Padding inside the button */\n    text-align: center; /* Center text inside the button */\n    text-decoration: none; /* Remove underline from text */\n    display: inline-block; /* Allow width and height to be set */\n    font-size: 16px; /* Set font size */\n    margin: 4px 2px; /* Spacing around the button */\n    cursor: pointer; /* Change mouse cursor to pointer on hover */\n    border: none; /* Remove border */\n    border-radius: 5px; /* Rounded corners */\n}\n", ""]);
 
 // exports
 
@@ -81516,7 +81760,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
-// imported packages
+// Imported packages
 
 
 
@@ -81524,7 +81768,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 
-//gobal declaration for vue form
+// Global declaration for vue form
 window.Form = vform__WEBPACK_IMPORTED_MODULE_4__["Form"];
 Vue.component(vform__WEBPACK_IMPORTED_MODULE_4__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["HasError"]);
 Vue.component(vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"]);
@@ -81541,7 +81785,13 @@ var routes = [{
 }, {
   path: '/items',
   component: __webpack_require__(/*! ./components/items/Index.vue */ "./resources/js/components/items/Index.vue")["default"]
-}, {
+},
+// {
+//     path: '/upload',
+//     component: require('./components/FileUpload.vue').default,
+//     name: 'upload'
+// },
+{
   path: '/items-create',
   component: __webpack_require__(/*! ./components/items/Create.vue */ "./resources/js/components/items/Create.vue")["default"]
 }, {
