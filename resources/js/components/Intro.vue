@@ -147,7 +147,7 @@ export default {
             .then(response => {
                 this.alerts = response.data.map(item => ({
                     ...item,
-                    propertiesCount: JSON.parse(item.properties).length // Assuming 'properties' is an array
+                    propertiesCount: JSON.parse(item.properties).length
                 }));
                 this.alerts.sort((a, b) => new Date(a.expired_date) - new Date(b.expired_date));
             })

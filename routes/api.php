@@ -18,6 +18,7 @@ use App\Http\Controllers\API\FileUploadController;
 // Route::get('api/files/download/{id}', [FileUploadController::class, 'downloadFile']);
 // Route::get('api/files/view/{id}', [FileUploadController::class, 'viewFile']);
 // Route::post('/api/upload', 'API\FileUploadController@upload');
+Route::get('/search', 'Api\SearchController@search'); //search
 Route::get('/items/expiring', 'API\ItemController@getExpiringItems');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

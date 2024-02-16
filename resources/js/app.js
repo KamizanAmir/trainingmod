@@ -33,11 +33,11 @@ let routes = [{
         path: '/items',
         component: require('./components/items/Index.vue').default
     },
-    // {
-    //     path: '/upload',
-    //     component: require('./components/FileUpload.vue').default,
-    //     name: 'upload'
-    // },
+    {
+        path: '/search',
+        component: require('./components/search.vue').default,
+        name: 'search'
+    },
     {
         path: '/items-create',
         component: require('./components/items/Create.vue').default

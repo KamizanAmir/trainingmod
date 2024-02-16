@@ -41,12 +41,12 @@
                                 <p>Employee Records</p>
                             </router-link>
                         </li>
-                        <!-- <li class="nav-item">
-                            <router-link to="/upload" class="nav-link">
-                                <i class="fa fa-file nav-icon white"></i>
-                                <p>File Upload</p>
+                        <li class="nav-item">
+                            <router-link to="/search" class="nav-link">
+                                <i class="fa fa-search nav-icon white"></i>
+                                <p>Search</p>
                             </router-link>
-                        </li> -->
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">

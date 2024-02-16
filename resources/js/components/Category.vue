@@ -115,7 +115,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="l_type">Labor Type</label>
+                                <label for="l_type">Labour Type</label>
                                 <select v-model="form.l_type" name="l_type" class="form-control" :class="{ 'is-invalid': form.errors.has('l_type') }">
                                     <option disabled value="">Please select one</option>
                                     <option value="DL">DL</option>
