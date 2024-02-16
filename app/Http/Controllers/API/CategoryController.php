@@ -49,6 +49,7 @@ class CategoryController extends Controller
             't_name' => 'required',
             't_type' => 'required',
             'l_type' => 'required',
+            't_hours' => 'required',
             // other validation rules...
         ]);
     
@@ -57,6 +58,7 @@ class CategoryController extends Controller
         $category->t_name = $request->t_name; // Save t_name
         $category -> t_type = $request -> t_type;
         $category -> l_type = $request -> l_type;
+        $category -> t_hours = $request -> t_hours;
         // other fields...
         $category->save();
     
@@ -96,6 +98,7 @@ class CategoryController extends Controller
             't_name' => 'required', // Add validation for the trainer name //this under update $id
             't_type' => 'required',
             'l_type' => 'required',
+            't_hours' => 'required',
             // other validation rules...
         ]);
 
@@ -104,6 +107,7 @@ class CategoryController extends Controller
         $category->t_name = $request->t_name; // Save the trainer name
         $category -> t_type = $request -> t_type;
         $category -> l_type = $request -> l_type;
+        $category -> t_hours = $request -> t_hours;
         // other fields...
         $category->save();
 

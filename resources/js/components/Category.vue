@@ -104,6 +104,19 @@
                                 <has-error :form="form" field="t_name"></has-error>
                             </div>
                             <div class="form-group">
+                                <label for="t_hours">Training Hour</label>
+                                <input
+                                    v-model="form.t_hours"
+                                    type="text"
+                                    name="t_hours"
+                                    class="form-control"
+                                    placeholder="HH:MM hour"
+                                    :class="{ 'is-invalid': form.errors.has('t_hours') }"
+                                >
+                                <has-error :form="form" field="t_hours"></has-error>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="t_type">Training Type</label>
                                 <select v-model="form.t_type" name="t_type" class="form-control" :class="{ 'is-invalid': form.errors.has('t_type') }">
                                     <option disabled value="">Please select one</option>
@@ -115,7 +128,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="l_type">Labor Type</label>
+                                <label for="l_type">Labour Type</label>
                                 <select v-model="form.l_type" name="l_type" class="form-control" :class="{ 'is-invalid': form.errors.has('l_type') }">
                                     <option disabled value="">Please select one</option>
                                     <option value="DL">DL</option>
@@ -150,6 +163,7 @@ export default {
                 t_name: "",
                 t_type: "",
                 l_type: "",
+                t_hours: "",
             })
         };
     },

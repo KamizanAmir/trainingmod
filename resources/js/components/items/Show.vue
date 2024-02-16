@@ -31,7 +31,8 @@
                             <span v-if="item.category" style="color:blue;">{{item.category.name}}</span>
                             <span v-else class="text-danger">May be deleted</span> ||
                                 <span v-if="item.category" class="text-bold">Training Type : </span><a style="color: blueviolet;">{{ item.category.t_type }}</a> ||
-                                <span v-if="item.category" class="text-bold">Labor Type :</span> {{ item.category.l_type }}
+                                <span v-if="item.category" class="text-bold">Labor Type :</span> {{ item.category.l_type }} ||
+                                <span v-if="item.category" class="text-bold">Training Hour(Hours) :</span> {{ item.category.t_hours }}
                         </h5>
                         <hr style="margin-top: 25px;"> <!-- Divider -->
                         <div class="employee-info">
@@ -98,7 +99,7 @@ export default {
             let csvContent = "data:text/csv;charset=utf-8,";
 
             // Corrected headers
-            csvContent += "Employee ID,Employee Name,Training Module,Trainer Name, Training Type,Labour Type,Training Date,Expired Date\r\n";
+            csvContent += "Employee ID,Employee Name,Training Module,Trainer Name, Training Type,Labour Type, Training Hours(h), Training Date,Expired Date\r\n";
 
             // Add each row of data
             JSON.parse(data.properties).forEach((property) => {
@@ -110,6 +111,7 @@ export default {
                     data.name, // Trainer Name
                     data.category ? data.category.t_type : 'Deleted', // Training Type
                     data.category ? data.category.l_type : 'Deleted', // Labour Type
+                    data.category ? data.category.t_hours : 'Deleted', // Training Hour
                     this.formatDate(data.training_date), // Training Date
                     this.formatDate(data.expired_date) // Expired Date
                 ].join(',');
