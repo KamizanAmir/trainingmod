@@ -2218,7 +2218,8 @@ __webpack_require__.r(__webpack_exports__);
         name: "",
         t_name: "",
         t_type: "",
-        l_type: ""
+        l_type: "",
+        t_hours: ""
       })
     };
   },
@@ -2823,7 +2824,7 @@ __webpack_require__.r(__webpack_exports__);
       var csvContent = "data:text/csv;charset=utf-8,";
 
       // Corrected headers
-      csvContent += "Employee ID,Employee Name,Training Module,Trainer Name, Training Type,Labour Type,Training Date,Expired Date\r\n";
+      csvContent += "Employee ID,Employee Name,Training Module,Trainer Name, Training Type,Labour Type, Training Hours(h), Training Date,Expired Date\r\n";
 
       // Add each row of data
       JSON.parse(data.properties).forEach(function (property) {
@@ -2840,6 +2841,8 @@ __webpack_require__.r(__webpack_exports__);
         // Training Type
         data.category ? data.category.l_type : 'Deleted',
         // Labour Type
+        data.category ? data.category.t_hours : 'Deleted',
+        // Training Hour
         _this2.formatDate(data.training_date),
         // Training Date
         _this2.formatDate(data.expired_date) // Expired Date
@@ -3152,6 +3155,42 @@ var render = function render() {
     attrs: {
       form: _vm.form,
       field: "t_name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "t_hours"
+    }
+  }, [_vm._v("Training Hour")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.t_hours,
+      expression: "form.t_hours"
+    }],
+    staticClass: "form-control",
+    "class": {
+      "is-invalid": _vm.form.errors.has("t_hours")
+    },
+    attrs: {
+      type: "text",
+      name: "t_hours",
+      placeholder: "HH:MM hour"
+    },
+    domProps: {
+      value: _vm.form.t_hours
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form, "t_hours", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("has-error", {
+    attrs: {
+      form: _vm.form,
+      field: "t_hours"
     }
   })], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
@@ -4470,7 +4509,9 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.item.category.t_type))]), _vm._v(" ||\n                            "), _vm.item.category ? _c("span", {
     staticClass: "text-bold"
-  }, [_vm._v("Labor Type :")]) : _vm._e(), _vm._v(" " + _vm._s(_vm.item.category.l_type) + "\n                    ")]), _vm._v(" "), _c("hr", {
+  }, [_vm._v("Labor Type :")]) : _vm._e(), _vm._v(" " + _vm._s(_vm.item.category.l_type) + " ||\n                            "), _vm.item.category ? _c("span", {
+    staticClass: "text-bold"
+  }, [_vm._v("Training Hour(Hours) :")]) : _vm._e(), _vm._v(" " + _vm._s(_vm.item.category.t_hours) + "\n                    ")]), _vm._v(" "), _c("hr", {
     staticStyle: {
       "margin-top": "25px"
     }
